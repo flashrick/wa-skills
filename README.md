@@ -19,6 +19,7 @@ It is designed to support a staged web-development workflow where different skil
 - technical architecture
 - project-level agent operating rules
 - persistent execution planning across sessions
+- application security review for web risks
 - feature impact and regression analysis
 - backend implementation
 - frontend implementation
@@ -186,7 +187,30 @@ Do not use this skill for:
 
 ---
 
-### 7. `backend-implementer`
+### 7. `web-security-reviewer`
+Responsible for:
+- reviewing scoped web features or changed areas for application security risk
+- identifying auth, permission, tenant-isolation, input-handling, data-exposure, and browser-security issues
+- recommending focused mitigations and security verification targets
+
+Typical outputs:
+- `docs/security-review.md`
+- `docs/security-checklist.md`
+
+Use this skill when:
+- the work touches login, session, roles, permissions, uploads, rich text, webhooks, CORS, cookies, JWTs, redirects, or sensitive data
+- the user asks for a security review
+- a release candidate needs focused app-security scrutiny
+
+Do not use this skill for:
+- full infrastructure or network security design
+- formal penetration testing
+- primary feature implementation
+- generic code review unrelated to security risk
+
+---
+
+### 8. `backend-implementer`
 Responsible for:
 - backend code
 - APIs
@@ -213,7 +237,7 @@ Do not use this skill for:
 
 ---
 
-### 8. `frontend-implementer`
+### 9. `frontend-implementer`
 Responsible for:
 - pages
 - components
@@ -240,7 +264,7 @@ Do not use this skill for:
 
 ---
 
-### 9. `test-engineer`
+### 10. `test-engineer`
 Responsible for:
 - adding or updating tests
 - running validation checks
@@ -268,7 +292,7 @@ Do not use this skill for:
 
 ---
 
-### 10. `deploy-readiness-check`
+### 11. `deploy-readiness-check`
 Responsible for:
 - deployment readiness review
 - environment/config completeness
@@ -292,7 +316,7 @@ Do not use this skill for:
 
 ---
 
-### 11. `workflow-orchestrator`
+### 12. `workflow-orchestrator`
 Responsible for:
 - deciding which skill should act next
 - enforcing stage order
@@ -332,6 +356,8 @@ Default web-project workflow:
 7. `frontend-implementer`
 8. `test-engineer`
 9. `deploy-readiness-check`
+
+`web-security-reviewer` is optional but recommended when work touches auth, permissions, sensitive data, external input, tenant boundaries, or release-critical security surfaces.
 
 `feature-impact-reviewer` is optional and fits around behavior-changing work:
 - before implementation to map regression risk
@@ -375,6 +401,7 @@ Examples:
 - `$agents-md-maintainer` for project-root Codex operating rules
 - `$plans-md-maintainer` for project-root execution plan maintenance
 - `$feature-impact-reviewer` for change-specific regression impact analysis
+- `$web-security-reviewer` for scoped application-security review
 - `$backend-implementer` for server-side implementation
 - `$frontend-implementer` for UI implementation
 - `$test-engineer` for validation
@@ -435,6 +462,8 @@ WA-SKILLS/
 ├── plans-md-maintainer/
 │   └── SKILL.md
 ├── feature-impact-reviewer/
+│   └── SKILL.md
+├── web-security-reviewer/
 │   └── SKILL.md
 ├── backend-implementer/
 │   └── SKILL.md

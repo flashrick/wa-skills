@@ -120,6 +120,8 @@ This repository is expected to follow a structure similar to:
 │   └── SKILL.md
 ├── feature-impact-reviewer/
 │   └── SKILL.md
+├── web-security-reviewer/
+│   └── SKILL.md
 ├── backend-implementer/
 │   └── SKILL.md
 ├── frontend-implementer/
