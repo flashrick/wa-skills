@@ -1,113 +1,178 @@
 ---
 name: deploy-readiness-check
-description: Evaluate whether a web project is ready to deploy by reviewing environment setup, build readiness, release blockers, and operational assumptions. Use this skill for deployment readiness assessment, not for writing core feature code or leading the main testing workflow.
+description: Review a web project for pre-deploy readiness across configuration, migrations, observability, rollback, and release-risk gaps.
 ---
 
-# Purpose
+# Deploy Readiness Check
 
-This skill assesses whether the current project state is ready for deployment.
+## What It Does
 
-Use this skill to:
-- review release readiness
-- review environment variable completeness
-- review build assumptions
-- review CI/CD assumptions
-- review hosting or container readiness assumptions
-- identify release blockers
-- produce a deployment checklist
+- Reviews whether a web project is ready for a deployment decision.
+- Checks configuration, migrations, operational assumptions, rollback posture, and release-risk gaps.
+- Produces a practical readiness summary that makes blockers and unknowns explicit.
 
-Do not use this skill to:
-- implement core product features
-- redefine requirements
-- act as the primary tester
-- replace infrastructure engineering beyond readiness assessment
+## When It Should Trigger
 
-# When this skill should trigger
+- The project has reached a release candidate state and needs a pre-deploy readiness review.
+- The main task is to assess deployment blockers, operational gaps, or launch readiness.
 
-Trigger this skill when the task involves:
-- deployment readiness
-- pre-release checks
-- environment setup completeness
-- release blockers
-- build packaging readiness
-- Docker or container assumptions
-- CI/CD readiness
-- launch checklist generation
+## When It Should Not Trigger
 
-# When this skill should NOT trigger
+- The task is mainly about feature scoping, design work, primary implementation, or core testing execution.
+- The real blocker is still missing implementation or validation rather than deploy review.
+- The request is for infrastructure design rather than readiness assessment.
 
-Do not trigger this skill when the task is mainly about:
-- building product features
-- requirement clarification
-- UI design
-- writing the full testing strategy
-- architecture planning unless needed for release assessment
+## Expected Inputs
 
-# Inputs expected
+- Implementation summary and changed behavior
+- Test or verification summary
+- Deployment target assumptions
+- Runtime configuration and environment expectations
+- Migration, observability, and rollback context if available
 
-This skill expects:
-- project scope
-- implementation summary
-- test summary
-- build commands
-- deployment target assumptions
-- environment/config expectations
-- Docker/hosting/CI files if they exist
+## Expected Outputs
 
-# Outputs
+- A deployment readiness summary with ready items, blockers, and unknowns
+- A concrete checklist for pre-deploy actions and follow-up
+- Release-risk notes tied to specific gaps
+- Explicit handoff notes for the skill or owner that must unblock release
 
-Create or update:
-- `docs/deploy-checklist.md`
+## Workflow
 
-Optional:
-- `docs/release-blockers.md`
+### 1. Frame The Release Target
 
-# Output requirements
+- Restate what is intended to be deployed and to which environment.
+- Identify the release-critical surfaces: runtime config, data changes, external services, logging, alerting, rollback, and operational dependencies.
+- Separate confirmed readiness from assumptions immediately.
 
-## `docs/deploy-checklist.md`
-Should include:
-- required environment variables
-- build commands
-- start/run commands
-- database or migration requirements
-- asset or static build requirements
-- external service dependencies
-- CI/CD assumptions
-- logging/monitoring assumptions
-- rollback considerations if relevant
-- open blockers
+### 2. Inspect Release Inputs
 
-# Constraints and non-goals
+- Read implementation and validation summaries first.
+- Inspect deployment-related files and docs if they exist.
+- Reuse the repo's actual deployment model instead of inventing a new one.
 
-Non-goals:
-- becoming a full DevOps replacement
-- silently creating a production architecture redesign
-- masking missing validation
+### 3. Check Readiness Areas
 
-Constraints:
-- distinguish confirmed readiness from assumptions
-- explicitly list unknowns
-- prefer practical release blockers over abstract concerns
-- tie every blocker to an action or owner where possible
+- Review configuration completeness, secrets handling, and runtime assumptions.
+- Review migrations, seed data, and backward-compatibility risks.
+- Review build, startup, health visibility, and observability expectations.
+- Review rollback posture and release-blocking unknowns.
 
-# Workflow
+### 4. Classify Findings
 
-1. Read implementation and test summaries.
-2. Inspect deployment-related files if present.
-3. Identify build, runtime, and environment dependencies.
-4. Identify missing secrets, services, or setup requirements.
-5. Write the readiness checklist.
-6. Separate confirmed-ready items from unknown or blocked items.
-7. Summarize release confidence and blockers.
+- Mark each item as ready, blocked, or unknown.
+- Tie blockers to a specific missing condition or action.
+- Distinguish real release risk from speculative concern.
 
-# Handoff expectations
+### 5. Summarize Decision Support
 
-Hand off to:
-- `workflow-orchestrator`
-- optionally implementation skills if blockers require code changes
+- Produce a checklist the team can execute.
+- Make the minimum next steps explicit.
+- Do not hide unknowns behind a generic "looks fine" summary.
 
-Your handoff must clearly state:
-- ready items
-- blocked items
-- unknown items
-- minimum next steps before deployment
+### 6. Prepare Handoff
+
+- Route code or config blockers back to the relevant implementation skill.
+- Route unresolved validation gaps back to `test-engineer`.
+- Route cross-skill sequencing issues to `workflow-orchestrator` when coordination is the real problem.
+
+## Questioning Strategy
+
+- Ask questions only when they change release confidence or reveal a deployment blocker.
+- Prefer inspecting actual config and release artifacts before asking the user.
+- Keep questions operational and evidence-seeking, not speculative.
+- Do not broaden into infrastructure architecture design unless the user explicitly redirects the task.
+
+Use questions like these when needed:
+
+- "What environment is this deployment targeting first?"
+- "Are there required secrets, migrations, or external services not represented in the repo?"
+- "What rollback option exists if this release fails?"
+- "What monitoring or logs will confirm the deployment is healthy?"
+- "Are any known test failures being accepted for this release?"
+
+Avoid questions like these unless the user explicitly asks for that depth:
+
+- feature-scope questions owned by `project-manager`
+- UI design questions owned by `uiux-designer`
+- primary implementation design questions owned by implementation skills
+
+## Output Shape
+
+When producing a readiness artifact, prefer this structure:
+
+```md
+# Deploy Readiness Summary
+
+## Release Target
+- What is being deployed
+- Target environment
+
+## Ready
+- Confirmed-ready items
+
+## Blocked
+- Release blockers
+- Required actions
+
+## Unknown
+- Missing information that affects confidence
+
+## Checklist
+- Pre-deploy actions
+- Post-deploy verification actions
+- Rollback considerations
+
+## Handoff Notes
+- Which skill or owner must act next
+```
+
+Keep the summary concrete:
+
+- tie every blocker to a real condition or missing artifact
+- separate unknowns from confirmed failures
+- focus on release decisions, not generic platform theory
+
+## Handoff Expectations
+
+### To `backend-implementer` or `frontend-implementer`
+
+Provide:
+
+- code or configuration blockers
+- exact runtime or build assumptions that failed readiness review
+- migration or compatibility concerns
+- what must change before deploy confidence improves
+
+Do not provide:
+
+- vague "deployment issue" summaries
+- infrastructure redesign requests that are outside readiness review
+
+### To `test-engineer`
+
+Provide:
+
+- validation gaps that block release confidence
+- unverified critical paths
+- failures that need clearer triage before deployment
+
+Do not provide:
+
+- missing operational information disguised as test work
+
+### To `workflow-orchestrator`
+
+Provide only when coordination is the blocker:
+
+- current readiness status
+- which prerequisite stage is incomplete
+- what output is missing before deploy review can conclude
+
+## Non-Goals
+
+- Defining product scope or UX direction
+- Writing core feature code
+- Replacing targeted testing work
+- Designing a full infrastructure architecture
+- Making unsupported go/no-go claims without evidence

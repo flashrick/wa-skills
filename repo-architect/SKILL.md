@@ -1,142 +1,174 @@
 ---
 name: repo-architect
-description: Define technical architecture, module boundaries, API contracts, data flow, and implementation sequencing for a web project. Use this skill for architecture and integration planning, not for requirement interviews, visual design collection, or direct feature implementation.
+description: Define repository layout, module boundaries, ownership lines, and interface seams for a web project codebase.
 ---
 
-# Purpose
+# Repo Architect
 
-This skill turns approved requirements and design intent into a concrete technical plan.
+## What It Does
 
-Use this skill to:
-- define architecture
-- define module boundaries
-- define API contracts
-- define data model direction
-- define state and data flow
-- define implementation order
-- reduce ambiguity between backend and frontend
+- Turns scoped feature requirements into a concrete codebase shape.
+- Defines repository layout, module boundaries, ownership lines, and interface seams.
+- Produces architecture artifacts that implementation skills can follow without inventing structure ad hoc.
 
-Do not use this skill to:
-- interview the user for general requirements
-- decide visual style
-- write most production code
-- perform testing or deployment validation
+## When It Should Trigger
 
-# When this skill should trigger
+- A web project or major feature needs repository structure, boundary decisions, or interface planning before implementation.
+- Backend and frontend work would drift without clear ownership and seams.
 
-Trigger this skill when the task involves:
-- architecture
-- folder structure
-- code organization
-- API contract definition
-- data model planning
-- client/server boundaries
-- integration sequencing
-- implementation strategy
-- technical decomposition
+## When It Should Not Trigger
 
-# When this skill should NOT trigger
+- The task is mainly about product scoping, UI design, direct coding, test execution, or deploy review.
+- The repo structure is already stable enough and the work is routine implementation.
+- The request is really about endpoint behavior or UI flow rather than codebase boundaries.
 
-Do not trigger this skill when the task is mainly about:
-- broad product requirement clarification
-- UI preference discovery
-- writing final frontend code
-- writing final backend code
-- executing tests
-- deployment readiness checks
+## Expected Inputs
 
-# Inputs expected
+- Scoped feature or project brief
+- Acceptance criteria
+- UX guidance if user-facing flows already exist
+- Existing repository context if any
+- Known stack assumptions and integration constraints
 
-This skill expects:
-- project scope
-- acceptance criteria
-- UI/UX documents if available
-- current repo structure, if repo already exists
-- known stack decisions
-- constraints such as framework, hosting, auth, or database choice
+## Expected Outputs
 
-# Outputs
+- An architecture brief covering repository layout and ownership
+- Defined interface seams between layers or services
+- A dependency-aware implementation order for backend and frontend work
+- Explicit handoff notes for `backend-implementer` and `frontend-implementer`
 
-Create or update these files when useful:
-- `docs/architecture.md`
-- `docs/api-contract.md`
-- `docs/data-model.md`
-- optionally `docs/implementation-order.md`
+## Workflow
 
-# Output requirements
+### 1. Frame the Architectural Problem
 
-## `docs/architecture.md`
-Should include:
-- high-level system overview
-- frontend/backend responsibilities
-- module boundaries
-- key libraries or frameworks already assumed
-- state management direction
-- data flow summary
-- auth/session assumptions
-- integration points
-- risky areas and simplifications
+- Restate what the codebase must support.
+- Identify whether this is greenfield structure, feature expansion, refactor boundary work, or integration layering.
+- Separate fixed constraints from open architectural decisions.
 
-## `docs/api-contract.md`
-Should include:
-- route list
-- method
-- request shape
-- response shape
-- auth expectations
-- error shape
-- pagination/filtering rules if relevant
+### 2. Inspect the Existing Shape
 
-## `docs/data-model.md`
-Should include:
-- entities
-- important fields
-- relationships
-- constraints
-- lifecycle notes
-- migration or schema notes if relevant
+- Read the current repo if it exists.
+- Identify existing module boundaries, conventions, and pain points.
+- Reuse stable patterns when possible instead of inventing a parallel structure.
 
-## `docs/implementation-order.md` (optional)
-Should include:
-- recommended phase order
-- dependency notes
-- parallelizable tasks
-- blocked tasks
+### 3. Define the Boundaries
 
-# Constraints and non-goals
+- Decide which modules, packages, services, or layers own which responsibilities.
+- Clarify what crosses boundaries: APIs, events, shared types, adapters, or data contracts.
+- Keep boundaries understandable to implementers, not just theoretically clean.
 
-Non-goals:
-- replacing the project manager
-- replacing UI design work
-- rewriting requirements
-- writing large implementation patches unless explicitly asked
+### 4. Define the Interface Seams
 
-Constraints:
-- prefer simple architecture that fits the repo
-- prioritize clear handoffs to backend and frontend implementers
-- avoid speculative complexity
-- document assumptions explicitly
+- Document how backend, frontend, shared code, and integrations should connect.
+- Call out where contracts are fixed, provisional, or intentionally deferred.
+- Keep interface definitions implementation-ready but not implementation-specific.
 
-# Workflow
+### 5. Sequence the Work
 
-1. Read project scope and acceptance criteria.
-2. Read UI/UX docs if they exist.
-3. Inspect the repo if one exists.
-4. Identify required modules and boundaries.
-5. Define API contracts and data model direction.
-6. Define implementation sequence and dependency graph.
-7. Write architecture documents.
-8. Summarize what backend and frontend implementers should follow strictly.
+- Recommend an implementation order that respects dependencies.
+- Note what can proceed in parallel and what must be blocked.
+- Flag structural decisions that must not change silently during implementation.
 
-# Handoff expectations
+### 6. Prepare Handoffs
 
-Hand off to:
-- `backend-implementer`
-- `frontend-implementer`
+- Hand backend-facing structure and contracts to `backend-implementer`.
+- Hand frontend-facing structure and contracts to `frontend-implementer`.
+- If the real gap is still in user flow or page behavior, redirect to `uiux-designer` instead of forcing architecture prematurely.
 
-Your handoff must clearly state:
-- fixed contracts
-- module boundaries
-- required order of work
-- what can be parallelized
-- assumptions that must not be silently changed
+## Questioning Strategy
+
+- Ask only the questions that materially change boundaries, ownership, or sequencing.
+- Start from the existing repo and stated constraints before asking for preferences.
+- Prefer confirming a proposed structure over asking open-ended architecture brainstorming questions.
+- Treat unclear product scope as a blocker to raise back to `project-manager`, not a reason to broaden this skill.
+
+Use questions like these when needed:
+
+- "Does this need to fit an existing monolith, package structure, or service boundary?"
+- "Which integrations or domains must remain isolated?"
+- "Are backend and frontend expected to move independently or in the same repo slice?"
+- "Is there a fixed stack choice that constrains foldering or shared contracts?"
+- "What part of the structure must be stable for parallel implementation?"
+
+Avoid questions like these unless the user explicitly asks for that depth:
+
+- broad feature discovery questions owned by `project-manager`
+- visual or flow design questions owned by `uiux-designer`
+- endpoint implementation details owned by implementation skills
+
+## Output Document Shape
+
+When producing an architecture artifact, prefer this structure:
+
+```md
+# Architecture Brief
+
+## Objective
+- What the codebase must support
+- Key constraints
+
+## Repository Layout
+- Major directories, packages, or services
+- Responsibility of each
+
+## Boundaries And Interfaces
+- Ownership lines
+- Cross-boundary contracts
+- Shared code rules
+
+## Implementation Order
+- First slice
+- Dependent slices
+- Parallelizable work
+
+## Handoff Notes
+- What `backend-implementer` should follow
+- What `frontend-implementer` should follow
+- Open architectural questions
+```
+
+Make the document reusable:
+
+- Prefer concrete ownership and seam definitions over generic architecture prose.
+- Keep provisional decisions labeled as provisional.
+- Make dependency order explicit so implementation skills do not guess.
+
+## Handoff Expectations
+
+### To `backend-implementer`
+
+Provide:
+
+- backend-owned modules or services
+- interface seams and data boundaries
+- constraints on models, adapters, or integrations
+- dependency order and blocked areas
+
+Do not provide:
+
+- feature scope rewrites
+- UI flow definitions
+- broad implementation tasks without structural context
+
+### To `frontend-implementer`
+
+Provide:
+
+- frontend-owned modules or areas
+- shared contract expectations
+- integration boundaries with backend or platform code
+- any sequencing constraints that affect client work
+
+Do not provide:
+
+- visual design decisions
+- backend implementation details disguised as architecture
+- speculative abstractions without delivery value
+
+## Non-Goals
+
+- Clarifying product scope from scratch
+- Designing UI flows or visual systems
+- Writing production backend or frontend code
+- Owning test execution or deploy assessment
+- Acting as a generic technical strategist beyond repository and boundary definition

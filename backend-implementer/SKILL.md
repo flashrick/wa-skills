@@ -1,117 +1,170 @@
 ---
 name: backend-implementer
-description: Implement backend logic, APIs, database changes, middleware, and server-side integrations according to approved requirements and architecture. Use this skill for backend execution, not for redefining scope, leading UI decisions, or deployment review.
+description: Implement server-side web feature work such as APIs, business logic, data access, and backend integration points.
 ---
 
-# Purpose
+# Backend Implementer
 
-This skill implements server-side functionality based on approved planning and architecture.
+## What It Does
 
-Use this skill to:
-- implement API endpoints
-- implement service logic
-- implement data access
-- implement models and migrations
-- implement middleware
-- implement auth/session/server integrations
-- align backend behavior with documented contracts
+- Implements server-side behavior for a scoped web feature.
+- Writes or updates APIs, domain logic, persistence, and backend integration points.
+- Produces backend changes that match the agreed scope, contracts, and architecture.
 
-Do not use this skill to:
-- redefine product scope
-- decide UI direction
-- replace architecture planning
-- run deployment readiness reviews
+## When It Should Trigger
 
-# When this skill should trigger
+- The task is to add or modify backend feature behavior.
+- A scoped feature needs server-side implementation against a known or sufficiently stable contract.
 
-Trigger this skill when the task involves:
-- backend code
-- API implementation
-- database schema changes
-- migrations
-- service layer logic
-- repositories or ORM usage
-- middleware
-- auth/session implementation
-- server-side validation
-- integrations from the backend side
+## When It Should Not Trigger
 
-# When this skill should NOT trigger
+- The task is mainly about product scoping, UX definition, repo architecture, test-only work, or deploy review.
+- Required scope or contract decisions are still too unclear for safe implementation.
+- The request is actually about frontend rendering or interaction behavior.
 
-Do not trigger this skill when the task is mainly about:
-- requirement discovery
-- UI style questions
-- frontend rendering or component styling
-- test ownership as the main task
-- release or deploy checklist review
+## Expected Inputs
 
-# Inputs expected
+- Scoped feature brief and acceptance criteria
+- Architecture guidance when boundaries matter
+- Existing backend conventions and patterns
+- Known contract, model, or integration expectations
+- Relevant environment or dependency constraints
 
-This skill expects:
-- project scope
-- acceptance criteria
-- architecture docs
-- API contract
-- data model direction
-- relevant repo conventions
+## Expected Outputs
 
-If required documents are missing, explicitly state what is missing before implementation.
+- Backend code changes for the targeted feature slice
+- Any required schema or persistence updates
+- Focused notes on contract changes, blockers, or assumptions that affect downstream work
+- Explicit handoff notes for `test-engineer` and, when relevant, `frontend-implementer`
 
-# Outputs
+## Workflow
 
-Primary outputs:
-- backend code changes
-- database migrations if needed
-- API wiring
-- server validation logic
-- focused implementation notes in markdown if needed
+### 1. Confirm Readiness To Implement
 
-Optional file:
-- `docs/backend-implementation-notes.md`
+- Restate the server-side outcome being built.
+- Identify the affected backend surfaces: endpoints, services, models, jobs, policies, or integrations.
+- If scope or contract gaps would make implementation unsafe, surface them explicitly instead of filling them in silently.
 
-# Implementation rules
+### 2. Inspect Existing Patterns
 
-- Follow existing repo conventions.
-- Do not silently change approved contracts unless the change is required and clearly documented.
-- Keep edits bounded to backend concerns.
-- Prefer incremental, reviewable changes.
-- Preserve compatibility where reasonable.
-- Add comments or notes only when they increase clarity.
+- Read the current backend structure and conventions before editing.
+- Find the closest existing patterns for routing, validation, persistence, and integration behavior.
+- Reuse established conventions unless there is a documented reason not to.
 
-# Constraints and non-goals
+### 3. Map the Change
 
-Non-goals:
-- redesigning the architecture
-- redesigning the frontend
-- replacing the test engineer
-- making deploy decisions
+- Determine which files and backend layers own the feature.
+- Keep the slice coherent: routing, validation, domain logic, persistence, and integration behavior should line up.
+- Avoid mixing unrelated refactors into the work.
 
-Constraints:
-- respect documented API contracts
-- keep implementation aligned with acceptance criteria
-- call out blockers instead of inventing hidden product behavior
-- avoid mixing unrelated refactors into feature work
+### 4. Implement the Smallest Coherent Slice
 
-# Workflow
+- Make the minimum backend changes required for the scoped behavior.
+- Preserve existing contracts unless a change is required and documented.
+- Keep failure behavior, permission checks, and data assumptions explicit.
 
-1. Read the relevant project and architecture docs.
-2. Locate affected backend files and patterns.
-3. Map the requested feature to models, services, endpoints, and middleware.
-4. Implement the smallest coherent backend slice.
-5. Update or add migrations if needed.
-6. Run available backend validation checks where appropriate.
-7. Document any contract deviation or unresolved blockers.
-8. Summarize changed files and expected frontend impact.
+### 5. Verify the Behavior
 
-# Handoff expectations
+- Run relevant backend checks when available.
+- Review the result against the acceptance criteria and known contracts.
+- Call out anything that remains unverified.
 
-Hand off to:
-- `frontend-implementer` when frontend integration depends on completed backend behavior
-- `test-engineer` for validation and regression coverage
+### 6. Prepare Handoff
 
-Your handoff must clearly state:
-- changed endpoints
-- changed request/response behavior
-- changed data assumptions
-- migration requirements
-- mock data or setup notes needed for testing
+- Summarize what changed for `test-engineer`.
+- If frontend integration depends on new or changed behavior, state exactly what `frontend-implementer` can rely on.
+
+## Questioning Strategy
+
+- Ask questions only when they change backend behavior, contract expectations, or data handling.
+- Prefer confirming an inferred contract over requesting a full redesign discussion.
+- Push unclear product-scope questions back toward `project-manager` and unclear structure questions back toward `repo-architect`.
+- Do not ask users to resolve implementation minutiae that can be derived safely from the codebase.
+
+Use questions like these when needed:
+
+- "Is this behavior creating new server functionality or extending an existing path?"
+- "Are there fixed auth, validation, or integration constraints for this slice?"
+- "Should this preserve existing response behavior for current callers?"
+- "Does this require a persistent schema change or only runtime logic?"
+- "What backend behavior is required for the first release versus later?"
+
+Avoid questions like these unless the user explicitly asks for that depth:
+
+- UI layout or interaction questions owned by `uiux-designer` or `frontend-implementer`
+- broad scope questions owned by `project-manager`
+- repo-wide boundary questions owned by `repo-architect`
+
+## Output Shape
+
+When summarizing backend work, prefer this structure:
+
+```md
+# Backend Implementation Notes
+
+## Objective
+- Backend behavior added or changed
+
+## Changed Areas
+- Endpoints, services, models, jobs, or integrations touched
+
+## Contract Notes
+- Request or response changes
+- Validation or permission rules
+
+## Data Notes
+- Persistence or migration impact
+
+## Validation
+- Checks run
+- What remains unverified
+
+## Handoff Notes
+- What `frontend-implementer` can rely on
+- What `test-engineer` should verify
+```
+
+Keep the notes concrete:
+
+- name the changed behavior, not just the files
+- separate confirmed behavior from assumptions
+- flag any caller-visible change explicitly
+
+## Handoff Expectations
+
+### To `frontend-implementer`
+
+Provide:
+
+- caller-visible backend behavior
+- request and response expectations
+- error or permission behavior relevant to the UI
+- any temporary limitations or sequencing constraints
+
+Do not provide:
+
+- redesigned UI behavior
+- vague "API updated" notes without contract details
+- architecture rewrites hidden inside implementation work
+
+### To `test-engineer`
+
+Provide:
+
+- changed backend behaviors worth validating
+- setup or data prerequisites
+- expected success and failure cases
+- any unverified edge cases or known limitations
+
+Do not provide:
+
+- a generic request to "test everything"
+- missing acceptance criteria disguised as implementation notes
+
+## Non-Goals
+
+- Redefining product scope or user flows
+- Defining repository structure or service boundaries from scratch
+- Owning frontend implementation
+- Acting as the sole testing workflow
+- Making deployment readiness decisions

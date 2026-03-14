@@ -1,152 +1,167 @@
 ---
 name: uiux-designer
-description: Define visual direction, layout structure, design system, component appearance, and interaction style for a web project. Use this skill for UI/UX discovery and design documentation, not for business logic planning or final frontend implementation.
+description: Define web UI flows, interaction states, layout intent, and visual direction for a specific user-facing feature.
 ---
 
-# Purpose
+# UIUX Designer
 
-This skill is responsible for the product's visual and interaction design direction.
+## What It Does
 
-Use this skill to:
-- ask focused UI/UX questions
-- identify visual preferences and product tone
-- define layout patterns and page structure
-- define component styling rules
-- produce design documentation for later implementation
+- Turns a scoped feature into concrete UX and UI guidance for implementation.
+- Defines user flows, screen intent, states, interaction behavior, and visual direction.
+- Produces design artifacts that frontend work can follow without reinterpreting the feature from scratch.
 
-Do not use this skill to:
-- redefine product scope
-- decide backend behavior
-- write production frontend business code
-- act as the main project planner
+## When It Should Trigger
 
-# When this skill should trigger
+- A user-facing web feature needs UI flow design, screen structure, interaction states, or visual direction.
+- Frontend implementation is blocked on unclear UX decisions.
 
-Trigger this skill when the task involves:
-- colors
-- visual style
-- layout
-- spacing
-- typography
-- design system
-- component appearance
-- page structure
-- interaction feel
-- user flow presentation
-- responsive layout expectations
+## When It Should Not Trigger
 
-# When this skill should NOT trigger
+- The task is mainly about product scoping, repo structure, backend logic, testing, or deploy review.
+- The feature is already fully designed and the next step is implementation or validation.
+- The request is about generic brand strategy rather than a specific web feature.
 
-Do not trigger this skill when the task is mainly about:
-- requirement clarification
-- project scoping
-- technical architecture
-- backend logic
-- database design
-- frontend implementation details unrelated to design
-- testing
-- deployment readiness
+## Expected Inputs
 
-# Inputs expected
+- Feature goal and target users
+- Scope and acceptance criteria
+- Existing brand cues or design constraints if any
+- Known platform expectations such as desktop-first, mobile-first, or responsive
+- Existing UI patterns if the product already exists
 
-This skill expects some or all of:
-- product goal
-- target users
-- platform type
-- brand direction, if any
-- examples the user likes or dislikes
-- accessibility expectations
-- device priority (desktop-first, mobile-first, responsive)
+## Expected Outputs
 
-If key visual inputs are missing, ask the user concise and high-value questions.
+- A feature design brief with flow, screens, states, and interaction notes
+- Visual direction guidance tied to the feature
+- A reusable component and state inventory for implementation
+- Explicit handoff notes for `frontend-implementer`
 
-# Required questioning behavior
+## Workflow
 
-Ask only the minimum questions needed to lock design direction.
+### 1. Frame the Feature
 
-Prioritize questions in this order:
-1. overall style direction
-2. target audience and tone
-3. color preferences or restrictions
-4. layout density preference
-5. reference products or screenshots
-6. accessibility or usability constraints
+- Restate the user-facing outcome in one or two sentences.
+- Identify the primary user, entry point, and success path.
+- Separate confirmed requirements from assumptions.
 
-If the user is unsure, propose 2–3 design directions with tradeoffs.
+### 2. Find the UX Gaps
 
-# Outputs
+- Identify what is still undefined: flow order, page structure, validation behavior, empty states, loading states, permissions, edge cases, or responsive behavior.
+- Ask only the questions that materially change the flow or state design.
+- If inputs are incomplete, continue with labeled assumptions instead of stalling.
 
-Create or update these files when useful:
-- `docs/ui-style-guide.md`
-- `docs/page-structure.md`
-- `docs/component-spec.md`
+### 3. Define the Core Flow
 
-# Output requirements
+- Write the primary happy path first.
+- Cover important alternate paths only when they affect real implementation or acceptance criteria.
+- Keep flows tied to user goals, not abstract page lists.
 
-## `docs/ui-style-guide.md`
-Should include:
-- product tone
-- visual keywords
-- color direction
-- typography direction
-- spacing and radius rules
-- shadows, borders, and surfaces
-- icon/image usage guidance
-- responsiveness notes
-- accessibility notes
+### 4. Define Screens and States
 
-## `docs/page-structure.md`
-Should include:
-- primary pages
-- page goals
-- layout blocks per page
-- navigation structure
-- important interaction patterns
-- empty/loading/error state expectations
+- Describe each screen or major area by purpose, priority content, and key actions.
+- Call out loading, empty, error, success, and permission states where relevant.
+- Note responsive differences only when they change structure or behavior.
 
-## `docs/component-spec.md`
-Should include:
-- reusable component list
-- variants and states
-- style rules
-- behavior notes
-- usage constraints
+### 5. Set Visual Direction
 
-# Constraints and non-goals
+- Define tone, density, hierarchy, and interaction feel at a practical level.
+- Reuse existing product patterns when they exist.
+- Avoid drifting into a full design system unless the feature truly needs it.
 
-Non-goals:
-- building the final implemented frontend
-- changing product requirements
-- changing technical architecture
-- inventing backend contracts
+### 6. Prepare Handoff
 
-Constraints:
-- design decisions should support implementation simplicity
-- prefer reusable patterns over one-off decorative ideas
-- avoid over-design
-- document enough for implementers to follow consistently
+- Package the flow, screen guidance, component inventory, and unresolved questions for `frontend-implementer`.
+- If implementation reveals a structural repo concern rather than a design issue, route that question to `repo-architect`.
 
-# Workflow
+## Questioning Strategy
 
-1. Read existing planning documents.
-2. Identify missing UI/UX decisions.
-3. Ask concise clarifying questions only if needed.
-4. Propose a coherent visual direction.
-5. Define page structure and key layout decisions.
-6. Define component system and major states.
-7. Write or update design documentation.
-8. Summarize decisions clearly for the next skill.
+- Start from the scoped feature and ask only what changes the UX decision.
+- Prefer a draft-first approach: propose a likely flow, then ask the user to confirm or correct it.
+- Ask about user behavior, priority, and constraints before asking about aesthetics.
+- Avoid broad taste interviews unless the request is explicitly about visual exploration.
 
-# Handoff expectations
+Use questions like these when needed:
 
-Hand off to:
-- `repo-architect` for technical interpretation of the UI direction
-- `frontend-implementer` for implementation
+- "Who is the primary user for this flow?"
+- "What must the user be able to complete without friction?"
+- "Which states matter for the first release: empty, loading, error, approval, or permissions?"
+- "Is there an existing product pattern this feature should match?"
+- "Does mobile need different structure, or just responsive adaptation?"
 
-Your handoff must clearly state:
-- chosen design direction
-- page structure
-- reusable components
-- key interaction rules
-- responsive expectations
-- unresolved design questions, if any
+Avoid questions like these unless the user explicitly asks for that depth:
+
+- backend contract questions owned by `repo-architect` or `backend-implementer`
+- feature scope questions that belong with `project-manager`
+- implementation library choices that belong with implementation skills
+
+## Output Document Shape
+
+When producing a design artifact, prefer this structure:
+
+```md
+# Feature Design Brief
+
+## Objective
+- Feature goal
+- Target users
+- Success outcome
+
+## Core Flow
+- Entry point
+- Main user path
+- Important alternate paths
+
+## Screens And States
+### Screen or Area
+- Purpose
+- Key content
+- Primary actions
+- Loading, empty, error, and success states
+
+## Visual Direction
+- Tone and hierarchy
+- Layout intent
+- Interaction notes
+- Responsive notes
+
+## Components
+- Reusable components
+- Variants and state requirements
+
+## Handoff Notes
+- What `frontend-implementer` should follow strictly
+- Open UX questions
+```
+
+Make the document reusable:
+
+- Write in terms of user actions and visible behavior.
+- Keep unresolved design questions explicit.
+- Prefer concrete screen and state definitions over mood-board language.
+
+## Handoff Expectations
+
+### To `frontend-implementer`
+
+Provide:
+
+- the core flow and alternate paths
+- screen purpose and priority actions
+- required states and validation behavior
+- reusable components and interaction rules
+- constraints that must remain intact during implementation
+
+Do not provide:
+
+- backend contracts
+- repo structure decisions
+- vague design language without actionable screen guidance
+
+## Non-Goals
+
+- Clarifying broad product scope
+- Defining repository layout or service boundaries
+- Writing production frontend code
+- Defining backend APIs or data models
+- Owning full-project planning or release readiness

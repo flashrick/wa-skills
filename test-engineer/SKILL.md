@@ -1,109 +1,172 @@
 ---
 name: test-engineer
-description: Validate implemented functionality through tests, checks, failure triage, regression review, and verification summaries. Use this skill for testing and validation work, not for primary feature planning, UI direction, or deployment environment review.
+description: Add or refine automated tests and targeted quality checks for specific web-project behavior that already has an implementation path.
 ---
 
-# Purpose
+# Test Engineer
 
-This skill is responsible for validation quality after implementation.
+## What It Does
 
-Use this skill to:
-- add or update tests
-- run lint, build, and test checks where appropriate
-- classify failures
-- identify regressions
-- summarize validation status
-- point out coverage gaps and risk areas
+- Validates implemented web-project behavior with targeted tests and quality checks.
+- Adds or refines automated coverage around the changed behavior.
+- Produces a clear verification summary that distinguishes confirmed behavior, failures, and remaining risk.
 
-Do not use this skill to:
-- lead product planning
-- lead design work
-- own the main feature implementation
-- own deployment review
+## When It Should Trigger
 
-# When this skill should trigger
+- The main task is to add tests, update tests, run focused checks, diagnose failures, or summarize verification status.
+- A backend or frontend change needs validation against known behavior or acceptance criteria.
 
-Trigger this skill when the task involves:
-- adding tests
-- updating tests
-- running validation
-- diagnosing test failures
-- identifying regressions
-- summarizing test status
-- verifying acceptance criteria from a validation perspective
+## When It Should Not Trigger
 
-# When this skill should NOT trigger
+- The task is mainly about product scoping, design work, primary feature implementation, or deployment assessment.
+- There is no implementation path yet and the real need is still planning or coding.
+- The request is for generic quality ownership without a concrete behavior to validate.
 
-Do not trigger this skill when the task is mainly about:
-- feature scoping
-- visual design decisions
-- primary backend implementation
-- primary frontend implementation
-- release environment readiness
+## Expected Inputs
 
-# Inputs expected
+- Acceptance criteria or intended behavior
+- Implementation summary or changed areas
+- Relevant test commands and repo conventions
+- Known setup, fixtures, or environment constraints
+- Any existing failures or risk notes already identified
 
-This skill expects:
-- project scope
-- acceptance criteria
-- implementation summary
-- changed files
-- available test commands
-- repo validation conventions
+## Expected Outputs
 
-# Outputs
+- Updated or added automated tests where appropriate
+- A targeted verification summary tied to the changed behavior
+- Clear failure triage and risk notes
+- Explicit handoff notes for the implementation skill that needs follow-up or for `deploy-readiness-check`
 
-Primary outputs:
-- updated test files
-- validation summaries
-- categorized failures
-- risk notes
+## Workflow
 
-Optional file:
-- `docs/test-report.md`
+### 1. Frame The Validation Target
 
-# Output requirements
+- Restate the behavior being validated.
+- Identify the highest-risk paths, regressions, and boundary cases.
+- Distinguish what is already implemented from what is still only planned.
 
-If writing `docs/test-report.md`, include:
-- executed checks
-- pass/fail summary
-- failure categories
-- likely root causes
-- regression risk notes
-- missing test coverage
-- recommended next actions
+### 2. Inspect Existing Coverage
 
-# Constraints and non-goals
+- Read current tests and validation patterns before editing.
+- Find the closest existing test style and helpers.
+- Reuse test structure and fixtures unless there is a clear reason not to.
 
-Non-goals:
-- becoming the primary implementer of the whole feature
-- making large unrelated refactors
-- making release go/no-go decisions beyond validation status
+### 3. Add Or Refine Targeted Coverage
 
-Constraints:
-- focus on validating documented behavior
-- prefer targeted tests tied to changed behavior
-- separate confirmed failures from hypotheses
-- be explicit about what was not tested
+- Write tests around the changed behavior, not around unrelated areas.
+- Prefer coverage that proves acceptance criteria, failure behavior, and regression-sensitive paths.
+- Keep the scope tight instead of expanding into a full-suite rewrite.
 
-# Workflow
+### 4. Run Focused Checks
 
-1. Read acceptance criteria and implementation summaries.
-2. Identify the most important changed behaviors.
-3. Add or update targeted tests.
-4. Run available lint/build/test commands where appropriate.
-5. Categorize failures into product bug, test issue, environment issue, or unclear expectation.
-6. Summarize validation status and remaining risk.
-7. Escalate blockers clearly.
+- Execute the most relevant validation commands available.
+- Categorize failures as product bug, test issue, environment issue, or unclear expectation.
+- Keep confirmed failures separate from hypotheses.
 
-# Handoff expectations
+### 5. Summarize Verification Status
 
-Hand off to:
-- `backend-implementer` or `frontend-implementer` for fixes
-- `deploy-readiness-check` when validation is sufficiently complete
+- State what passed, what failed, and what was not tested.
+- Tie gaps back to user-visible or contract-level risk.
+- Do not hide uncertainty behind a generic green or red summary.
 
-Your handoff must clearly state:
-- what passed
-- what failed
-- what remains untested
-- what blocks release confidence
+### 6. Prepare Handoff
+
+- Route actionable failures back to `backend-implementer` or `frontend-implementer`.
+- When validation is sufficiently complete, hand the release-risk picture to `deploy-readiness-check`.
+
+## Questioning Strategy
+
+- Ask questions only when they change what should be tested or how to interpret failures.
+- Prefer deriving expected behavior from acceptance criteria and implementation notes before asking the user.
+- Push missing scope decisions back to `project-manager` and missing implementation decisions back to the relevant implementer.
+- Do not ask open-ended questions that broaden the task into general QA management.
+
+Use questions like these when needed:
+
+- "Which changed behavior matters most to validate first?"
+- "Is there an expected failure mode or edge case that must be covered?"
+- "Are there existing commands or suites that should be preferred for this area?"
+- "Is this failure considered a regression, a known limitation, or an environment issue?"
+- "What level of confidence is needed before handing off to deploy review?"
+
+Avoid questions like these unless the user explicitly asks for that depth:
+
+- scope-definition questions owned by `project-manager`
+- design-decision questions owned by `uiux-designer`
+- large implementation redesign questions owned by implementation skills
+
+## Output Shape
+
+When producing a validation artifact, prefer this structure:
+
+```md
+# Verification Summary
+
+## Objective
+- Behavior or slice validated
+
+## Coverage Added Or Updated
+- Tests added or changed
+
+## Checks Run
+- Commands executed
+- Scope of validation
+
+## Results
+- Passed
+- Failed
+- Not tested
+
+## Risk Notes
+- Regression risk
+- Environment issues
+- Coverage gaps
+
+## Handoff Notes
+- What implementers need to fix
+- What `deploy-readiness-check` should consider
+```
+
+Keep the summary concrete:
+
+- name behaviors, not just test files
+- separate observed failures from guesses
+- make untested areas visible
+
+## Handoff Expectations
+
+### To `backend-implementer` or `frontend-implementer`
+
+Provide:
+
+- the failing behavior or missing coverage
+- reproduction context or test evidence
+- severity or risk if known
+- what remains blocked after the fix
+
+Do not provide:
+
+- vague "tests failed" summaries
+- product-scope debates disguised as bug reports
+
+### To `deploy-readiness-check`
+
+Provide:
+
+- validation depth achieved
+- unresolved failures or skipped areas
+- notable regression or environment risk
+- whether release confidence is limited by missing coverage
+
+Do not provide:
+
+- a blanket release recommendation without evidence
+- missing deployment information disguised as test output
+
+## Non-Goals
+
+- Defining product scope or design direction
+- Acting as the primary feature implementer
+- Owning deployment assessment
+- Running broad organizational QA process outside the scoped behavior
+- Hiding validation gaps behind incomplete summaries

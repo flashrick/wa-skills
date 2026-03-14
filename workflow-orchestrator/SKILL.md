@@ -1,150 +1,175 @@
 ---
 name: workflow-orchestrator
-description: Coordinate the order of web-project skills, enforce stage acceptance gates, and decide which skill should act next based on current project state. Use this skill for workflow control and handoff discipline, not for direct requirement interviews, design creation, feature implementation, testing execution, or deployment analysis.
+description: Coordinate multi-skill web-project execution by assigning stage order, handoffs, and parallel work boundaries across specialized skills.
 ---
 
-# Purpose
+# Workflow Orchestrator
 
-This skill controls the workflow across specialized project skills.
+## What It Does
 
-Use this skill to:
-- determine the next appropriate skill
-- enforce stage order
-- check whether a stage is complete enough to proceed
-- maintain handoff discipline
-- prevent overlapping responsibilities
-- keep the project moving through explicit phases
+- Coordinates the order of specialized web-project skills.
+- Checks whether handoffs are complete enough for the next stage.
+- Recommends the next skill and any safe parallel work boundaries without doing that skill's content work.
 
-Do not use this skill to:
-- replace the project manager
-- create UI designs directly
-- implement backend or frontend features directly
-- run the main testing work directly
-- perform deployment analysis directly except to assess stage status
+## When It Should Trigger
 
-# Canonical stage order
+- The main task is to decide what skill should act next, whether a stage is ready, or how multi-skill work should be sequenced.
+- The project has multiple possible next steps and needs disciplined handoff control.
 
-Default stage order:
-1. project-manager
-2. uiux-designer
-3. repo-architect
-4. backend-implementer
-5. frontend-implementer
-6. test-engineer
-7. deploy-readiness-check
+## When It Should Not Trigger
 
-This order can be adjusted only with explicit justification.
+- The task is mainly about requirement clarification, design creation, architecture design, implementation, testing, or deploy assessment.
+- The next skill is already obvious and no gating or sequencing decision is needed.
+- The user wants this skill to do the actual work of a specialized skill.
 
-# When this skill should trigger
+## Expected Inputs
 
-Trigger this skill when the task involves:
-- deciding what should happen next
-- checking stage readiness
-- routing work to the correct skill
-- validating handoff completeness
-- preventing premature implementation
-- coordinating multi-stage execution
+- Current project stage or current state if known
+- Existing docs, handoff notes, or summaries from prior skills
+- Known blockers and unresolved assumptions
+- Acceptance criteria or release goal when available
+- Relevant changed files or implementation summaries if work has already started
 
-# When this skill should NOT trigger
+## Expected Outputs
 
-Do not trigger this skill when the task is mainly about:
-- gathering initial product requirements directly
-- producing the actual UI/UX design deliverables
-- writing implementation code
-- executing tests as the primary task
-- performing deploy-readiness analysis as the primary task
+- A current-stage assessment
+- A next-skill recommendation with reasoning
+- Explicit gate checks showing what is ready, blocked, or missing
+- Safe parallel work boundaries when parallel execution is justified
 
-# Inputs expected
+## Workflow
 
-This skill expects:
-- current project stage
-- existing docs in `docs/`
-- summaries from previous skills
-- known blockers
-- acceptance criteria
-- changed files if implementation already happened
+### 1. Identify The Current Stage
 
-# Stage acceptance gates
+- Restate the current project state in terms of actual artifacts, not guesses.
+- Determine whether the work is in scoping, design, architecture, implementation, validation, or release review.
+- If the stage is ambiguous, use the available outputs to infer the farthest completed stage conservatively.
 
-## Gate: project-manager -> uiux-designer
+### 2. Check Handoff Completeness
+
+- Inspect the outputs from the current or previous stage.
+- Verify whether the next stage has enough information to proceed safely.
+- Treat missing artifacts, missing acceptance criteria, or unresolved blockers as gate failures.
+
+### 3. Recommend The Next Skill
+
+- Route to the narrowest skill that solves the actual blocker.
+- Explain why that skill is next and why other skills should wait.
+- Only recommend parallel work when the write scopes or decision scopes are genuinely independent.
+
+### 4. Make Missing Conditions Explicit
+
+- List what is blocking progress, who owns it, and what artifact or decision is missing.
+- Distinguish a true blocker from a nice-to-have.
+- Do not bypass a missing handoff by inventing the downstream work.
+
+### 5. Record Status
+
+- Produce a concise workflow status summary when useful.
+- Keep it actionable enough that the next skill can start immediately.
+- Avoid turning the status into a generic project-management report.
+
+## Questioning Strategy
+
+- Ask questions only when they change stage routing or gate decisions.
+- Prefer reading existing artifacts before asking the user for status.
+- Keep questions about missing outputs, blockers, or sequencing constraints.
+- Do not broaden into product discovery, design review, or technical implementation debate.
+
+Use questions like these when needed:
+
+- "What is the latest completed artifact or stage for this work?"
+- "Is the current blocker missing scope, missing design, missing architecture, missing implementation, or missing validation?"
+- "Are any teams or files safe to move in parallel, or is there a shared dependency?"
+- "Which unresolved decision is preventing the next skill from starting cleanly?"
+- "Is there a release target that changes the recommended order?"
+
+Avoid questions like these unless the user explicitly asks for that depth:
+
+- scope-definition questions owned by `project-manager`
+- UX questions owned by `uiux-designer`
+- architecture or implementation questions owned by the corresponding specialist skill
+
+## Output Shape
+
+When producing a workflow status artifact, prefer this structure:
+
+```md
+# Workflow Status
+
+## Current Stage
+- Current stage
+- Evidence for that stage
+
+## Gate Check
+- Ready items
+- Missing items
+- Blockers
+
+## Next Skill
+- Recommended skill
+- Why it is next
+
+## Parallel Work
+- Safe parallel tracks
+- Shared dependencies
+
+## Handoff Notes
+- What the next skill needs
+- What must be resolved first
+```
+
+Keep the status concrete:
+
+- route based on actual artifacts, not generic phase theory
+- name the exact missing handoff or document
+- avoid doing the downstream skill's substantive work
+
+## Gate Expectations
+
+### `project-manager` -> `uiux-designer`
+
 Require:
-- scope is documented
-- core requirements are clear enough
-- technical stack is at least provisionally chosen
-- acceptance criteria exist
 
-## Gate: uiux-designer -> repo-architect
+- scoped objective
+- in-scope and out-of-scope boundaries
+- acceptance criteria or equivalent success definition
+
+### `uiux-designer` -> `repo-architect`
+
 Require:
-- visual direction is chosen
-- page structure is documented
-- reusable component direction is documented
 
-## Gate: repo-architect -> backend-implementer / frontend-implementer
+- defined user flows or screen intent
+- required states and interaction expectations
+- constraints that affect structure or implementation
+
+### `repo-architect` -> `backend-implementer` / `frontend-implementer`
+
 Require:
-- architecture exists
-- API contract is sufficiently defined
-- data model direction is sufficiently defined
-- implementation order is clear enough
 
-## Gate: backend-implementer -> frontend-implementer
+- clear module or ownership boundaries
+- known interface seams
+- dependency-aware implementation order
+
+### Implementation -> `test-engineer`
+
 Require:
-- backend contract is implemented or mocked clearly enough
-- integration assumptions are documented
 
-## Gate: frontend-implementer -> test-engineer
+- implemented behavior to validate
+- changed-area summary
+- known limitations or unverified areas
+
+### `test-engineer` -> `deploy-readiness-check`
+
 Require:
-- target user flow is implemented enough to validate
-- known gaps are documented
 
-## Gate: test-engineer -> deploy-readiness-check
-Require:
-- meaningful validation has been run
-- pass/fail status is summarized
-- major blockers are categorized
+- meaningful validation results
+- unresolved failures or risk summary
+- enough evidence to assess release confidence
 
-# Outputs
+## Non-Goals
 
-Optional file:
-- `docs/workflow-status.md`
-
-If useful, record:
-- current stage
-- completed stages
-- blocked stages
-- next recommended skill
-- missing documents
-- gate status
-
-# Constraints and non-goals
-
-Non-goals:
-- doing the content work of specialized skills
-- silently changing requirements or architecture
-- bypassing missing stage outputs without explanation
-
-Constraints:
-- route to the narrowest appropriate skill
-- be strict about handoff quality
-- keep summaries concise and actionable
-- prefer documented decisions over hidden assumptions
-
-# Workflow
-
-1. Inspect the current docs and stage artifacts.
-2. Determine current project stage.
-3. Check whether the current stage has met its acceptance gate.
-4. If not met, identify exactly what is missing.
-5. Recommend the next skill explicitly.
-6. Record status if useful.
-7. Avoid doing the next skill's actual work unless explicitly instructed.
-
-# Handoff expectations
-
-This skill does not produce core implementation artifacts.
-
-Its handoff must clearly state:
-- current stage
-- next recommended skill
-- why that skill is next
-- what documents or conditions are missing
-- whether the project is blocked, ready, or partially ready
+- Replacing specialized skills with generic coordination prose
+- Creating product scope, design, architecture, or implementation artifacts directly
+- Bypassing missing gates without explanation
+- Acting as a generic all-purpose manager for the whole project
