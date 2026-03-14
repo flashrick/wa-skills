@@ -167,6 +167,60 @@ Require:
 - unresolved failures or risk summary
 - enough evidence to assess release confidence
 
+## Optional Skill Routing
+
+These skills are sidecar or persistence skills, not mandatory core stages.
+
+### Route to `agents-md-maintainer`
+
+Use when:
+
+- the repository lacks a durable `AGENTS.md`
+- Codex keeps making repo-specific mistakes
+- command, editing, or workflow guardrails should be written down before more work continues
+
+Do not route there when:
+
+- the blocker is missing feature scope, architecture, implementation, or validation
+
+### Route to `plans-md-maintainer`
+
+Use when:
+
+- the work spans multiple sessions or milestones
+- the current stage, blockers, and next actions should persist in `PLANS.md`
+- execution state exists in chat or scattered docs and should be normalized into one durable plan
+
+Do not route there when:
+
+- the task is too small to justify persistent planning
+- the need is immediate routing only, not plan maintenance
+
+### Route to `feature-impact-reviewer`
+
+Use when:
+
+- a behavior-changing feature needs focused regression impact analysis
+- the team needs to know what could break before implementation
+- implementation is done but likely regression surfaces still need a tight review
+
+Do not route there when:
+
+- the change is purely cosmetic or obviously isolated
+- the real need is broad architecture work or actual test execution
+
+### Route to `web-security-reviewer`
+
+Use when:
+
+- the work touches auth, permissions, tenant boundaries, sensitive data, uploads, rich text, callbacks, cookies, CORS, CSRF, or similar security-sensitive surfaces
+- release confidence depends on a scoped application-security review
+
+Do not route there when:
+
+- the task is visual-only or otherwise has no meaningful security surface
+- the request is really for infrastructure security architecture or formal penetration testing
+
 ## Non-Goals
 
 - Replacing specialized skills with generic coordination prose

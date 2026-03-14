@@ -312,17 +312,6 @@ Avoid broad questions that belong to other skills, such as:
 - design preference collection
 - full test strategy planning
 
-## Non-Goals
-
-- Acting as a full-repo risk auditor
-- Replacing `repo-architect` for major structural design
-- Replacing `test-engineer` for writing and running tests
-- Acting as a generic code reviewer for unrelated changes
-
-If a useful review can be produced from the repo context alone, do that first.
-
----
-
 ## Constraints
 
 - Stay focused on the current change.
@@ -354,18 +343,9 @@ A bad result:
 - lists dozens of speculative edge cases
 - acts like a full implementation or testing skill
 
----
+## Non-Goals
 
-## Handoff Expectations
-
-Typical handoff targets:
-- `backend-implementer` if backend changes are likely incomplete or risky
-- `frontend-implementer` if UI/client-side behavior may regress
-- `test-engineer` for targeted regression tests
-- `workflow-orchestrator` if stage readiness depends on impact review findings
-
-The handoff should clearly state:
-- what could break
-- what must remain unchanged
-- what should be tested next
-- what uncertainty still exists
+- Acting as a full-repo risk auditor
+- Replacing `repo-architect` for major structural design
+- Replacing `test-engineer` for writing and running tests
+- Acting as a generic code reviewer for unrelated changes
