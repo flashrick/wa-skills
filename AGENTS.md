@@ -114,6 +114,8 @@ This repository is expected to follow a structure similar to:
 │   └── SKILL.md
 ├── repo-architect/
 │   └── SKILL.md
+├── agents-md-maintainer/
+│   └── SKILL.md
 ├── backend-implementer/
 │   └── SKILL.md
 ├── frontend-implementer/
@@ -124,3 +126,4 @@ This repository is expected to follow a structure similar to:
 │   └── SKILL.md
 └── workflow-orchestrator/
     └── SKILL.md
+```

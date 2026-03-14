@@ -17,6 +17,7 @@ It is designed to support a staged web-development workflow where different skil
 - requirement clarification
 - UI/UX design
 - technical architecture
+- project-level agent operating rules
 - backend implementation
 - frontend implementation
 - testing and validation
@@ -117,7 +118,30 @@ Do not use this skill for:
 
 ---
 
-### 4. `backend-implementer`
+### 4. `agents-md-maintainer`
+Responsible for:
+- creating a project-root `AGENTS.md`
+- updating stale or generic `AGENTS.md` rules
+- documenting repo-specific commands, boundaries, and workflow guardrails for Codex
+- auditing whether repository instructions match the actual codebase
+
+Typical outputs:
+- `AGENTS.md`
+
+Use this skill when:
+- a project repository does not yet have `AGENTS.md`
+- Codex needs repo-specific operating instructions
+- existing agent guidance is outdated, vague, or contradictory
+
+Do not use this skill for:
+- product scoping
+- UI or architecture design
+- mainline feature implementation
+- release-readiness analysis
+
+---
+
+### 5. `backend-implementer`
 Responsible for:
 - backend code
 - APIs
@@ -144,7 +168,7 @@ Do not use this skill for:
 
 ---
 
-### 5. `frontend-implementer`
+### 6. `frontend-implementer`
 Responsible for:
 - pages
 - components
@@ -171,7 +195,7 @@ Do not use this skill for:
 
 ---
 
-### 6. `test-engineer`
+### 7. `test-engineer`
 Responsible for:
 - adding or updating tests
 - running validation checks
@@ -198,7 +222,7 @@ Do not use this skill for:
 
 ---
 
-### 7. `deploy-readiness-check`
+### 8. `deploy-readiness-check`
 Responsible for:
 - deployment readiness review
 - environment/config completeness
@@ -222,7 +246,7 @@ Do not use this skill for:
 
 ---
 
-### 8. `workflow-orchestrator`
+### 9. `workflow-orchestrator`
 Responsible for:
 - deciding which skill should act next
 - enforcing stage order
@@ -256,10 +280,11 @@ Default web-project workflow:
 1. `project-manager`
 2. `uiux-designer`
 3. `repo-architect`
-4. `backend-implementer`
-5. `frontend-implementer`
-6. `test-engineer`
-7. `deploy-readiness-check`
+4. `agents-md-maintainer` when the repository needs a durable Codex operating contract before implementation scales
+5. `backend-implementer`
+6. `frontend-implementer`
+7. `test-engineer`
+8. `deploy-readiness-check`
 
 `workflow-orchestrator` exists across the whole process and should be used to:
 - determine the next step
@@ -296,6 +321,7 @@ Examples:
 - `$project-manager` for requirement clarification
 - `$uiux-designer` for visual system and layout direction
 - `$repo-architect` for technical planning
+- `$agents-md-maintainer` for project-root Codex operating rules
 - `$backend-implementer` for server-side implementation
 - `$frontend-implementer` for UI implementation
 - `$test-engineer` for validation
@@ -351,6 +377,8 @@ WA-SKILLS/
 │   └── SKILL.md
 ├── repo-architect/
 │   └── SKILL.md
+├── agents-md-maintainer/
+│   └── SKILL.md
 ├── backend-implementer/
 │   └── SKILL.md
 ├── frontend-implementer/
@@ -361,3 +389,4 @@ WA-SKILLS/
 │   └── SKILL.md
 └── workflow-orchestrator/
     └── SKILL.md
+```
