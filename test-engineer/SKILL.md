@@ -1,6 +1,6 @@
 ---
 name: test-engineer
-description: Add or refine automated tests and targeted quality checks for specific web-project behavior that already has an implementation path.
+description: Add or refine automated tests and targeted quality checks for specific web-project behavior that already has an implementation path, including browser-level interaction checks for frontend regressions when needed.
 ---
 
 # Test Engineer
@@ -9,6 +9,7 @@ description: Add or refine automated tests and targeted quality checks for speci
 
 - Validates implemented web-project behavior with targeted tests and quality checks.
 - Adds or refines automated coverage around the changed behavior.
+- Uses browser-level checks for frontend interaction regressions when layout, overlays, positioning, or hit-target behavior may break user flows.
 - Produces a clear verification summary that distinguishes confirmed behavior, failures, and remaining risk.
 
 ## When It Should Trigger
@@ -27,6 +28,7 @@ description: Add or refine automated tests and targeted quality checks for speci
 - Acceptance criteria or intended behavior
 - Implementation summary or changed areas
 - Relevant test commands and repo conventions
+- Existing browser automation setup such as Playwright, if present
 - Known setup, fixtures, or environment constraints
 - Any existing failures or risk notes already identified
 
@@ -35,6 +37,7 @@ description: Add or refine automated tests and targeted quality checks for speci
 - Updated or added automated tests where appropriate
 - A targeted verification summary tied to the changed behavior
 - Clear failure triage and risk notes
+- Browser-interaction evidence when frontend regressions depend on real rendering or clickability
 - Explicit handoff notes for the implementation skill that needs follow-up or for `deploy-readiness-check`
 
 ## Workflow
@@ -49,17 +52,21 @@ description: Add or refine automated tests and targeted quality checks for speci
 
 - Read current tests and validation patterns before editing.
 - Find the closest existing test style and helpers.
+- For frontend work, check whether the repo already uses browser automation such as Playwright before inventing a new approach.
 - Reuse test structure and fixtures unless there is a clear reason not to.
 
 ### 3. Add Or Refine Targeted Coverage
 
 - Write tests around the changed behavior, not around unrelated areas.
 - Prefer coverage that proves acceptance criteria, failure behavior, and regression-sensitive paths.
+- When frontend changes affect layout, layering, hover states, dialogs, drawers, sticky elements, or responsive behavior, prefer a browser-level check over DOM-only assumptions.
 - Keep the scope tight instead of expanding into a full-suite rewrite.
 
 ### 4. Run Focused Checks
 
 - Execute the most relevant validation commands available.
+- Prefer existing repo test commands first. If browser interaction is the real risk and Playwright or equivalent browser automation is available, use it for the narrowest realistic check.
+- For frontend interaction regressions, verify key controls are visible, enabled, reachable, and not blocked by overlays or hitbox issues.
 - Categorize failures as product bug, test issue, environment issue, or unclear expectation.
 - Keep confirmed failures separate from hypotheses.
 
@@ -67,6 +74,7 @@ description: Add or refine automated tests and targeted quality checks for speci
 
 - State what passed, what failed, and what was not tested.
 - Tie gaps back to user-visible or contract-level risk.
+- Make browser-only gaps explicit, such as unverified clickability, responsive layout, focus handling, or overlay behavior.
 - Do not hide uncertainty behind a generic green or red summary.
 
 ### 6. Prepare Handoff
@@ -86,6 +94,7 @@ Use questions like these when needed:
 - "Which changed behavior matters most to validate first?"
 - "Is there an expected failure mode or edge case that must be covered?"
 - "Are there existing commands or suites that should be preferred for this area?"
+- "Does this frontend change need browser-level verification for clickability, layout, or overlay risk?"
 - "Is this failure considered a regression, a known limitation, or an environment issue?"
 - "What level of confidence is needed before handing off to deploy review?"
 
@@ -111,6 +120,7 @@ When producing a validation artifact, prefer this structure:
 ## Checks Run
 - Commands executed
 - Scope of validation
+- Browser or viewport coverage when relevant
 
 ## Results
 - Passed
@@ -132,6 +142,7 @@ Keep the summary concrete:
 - name behaviors, not just test files
 - separate observed failures from guesses
 - make untested areas visible
+- state when browser interaction was not validated for a frontend risk area
 
 ## Handoff Expectations
 
@@ -141,6 +152,7 @@ Provide:
 
 - the failing behavior or missing coverage
 - reproduction context or test evidence
+- whether the failure appears only in real browser interaction, such as overlay blocking, hit-target failure, or responsive layout breakage
 - severity or risk if known
 - what remains blocked after the fix
 
@@ -169,4 +181,5 @@ Do not provide:
 - Acting as the primary feature implementer
 - Owning deployment assessment
 - Running broad organizational QA process outside the scoped behavior
+- Running broad manual browser exploration when a narrow targeted check would answer the question
 - Hiding validation gaps behind incomplete summaries

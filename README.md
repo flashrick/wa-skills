@@ -224,6 +224,7 @@ Responsible for:
 - running validation checks
 - triaging failures
 - identifying regressions
+- performing browser-level interaction checks for frontend regression risks when needed
 - reporting validation status
 - highlighting coverage gaps
 
