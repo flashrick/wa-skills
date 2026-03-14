@@ -18,6 +18,7 @@ It is designed to support a staged web-development workflow where different skil
 - UI/UX design
 - technical architecture
 - project-level agent operating rules
+- feature impact and regression analysis
 - backend implementation
 - frontend implementation
 - testing and validation
@@ -141,7 +142,29 @@ Do not use this skill for:
 
 ---
 
-### 5. `backend-implementer`
+### 5. `feature-impact-reviewer`
+Responsible for:
+- reviewing what an intended or completed feature change could break
+- identifying shared contracts, dependent behavior, and regression-sensitive edges
+- suggesting the most valuable verification targets before or after implementation
+
+Typical outputs:
+- `docs/feature-impact.md`
+
+Use this skill when:
+- a change modifies existing behavior rather than adding an isolated new screen or endpoint
+- the user asks what could break
+- a quick regression-oriented review is needed before or after implementation
+
+Do not use this skill for:
+- full-repo audits
+- broad architecture design
+- primary implementation work
+- owning test execution
+
+---
+
+### 6. `backend-implementer`
 Responsible for:
 - backend code
 - APIs
@@ -168,7 +191,7 @@ Do not use this skill for:
 
 ---
 
-### 6. `frontend-implementer`
+### 7. `frontend-implementer`
 Responsible for:
 - pages
 - components
@@ -195,7 +218,7 @@ Do not use this skill for:
 
 ---
 
-### 7. `test-engineer`
+### 8. `test-engineer`
 Responsible for:
 - adding or updating tests
 - running validation checks
@@ -222,7 +245,7 @@ Do not use this skill for:
 
 ---
 
-### 8. `deploy-readiness-check`
+### 9. `deploy-readiness-check`
 Responsible for:
 - deployment readiness review
 - environment/config completeness
@@ -246,7 +269,7 @@ Do not use this skill for:
 
 ---
 
-### 9. `workflow-orchestrator`
+### 10. `workflow-orchestrator`
 Responsible for:
 - deciding which skill should act next
 - enforcing stage order
@@ -286,6 +309,10 @@ Default web-project workflow:
 7. `test-engineer`
 8. `deploy-readiness-check`
 
+`feature-impact-reviewer` is optional and fits around behavior-changing work:
+- before implementation to map regression risk
+- after implementation to check what may still be missing
+
 `workflow-orchestrator` exists across the whole process and should be used to:
 - determine the next step
 - verify whether a stage is complete
@@ -322,6 +349,7 @@ Examples:
 - `$uiux-designer` for visual system and layout direction
 - `$repo-architect` for technical planning
 - `$agents-md-maintainer` for project-root Codex operating rules
+- `$feature-impact-reviewer` for change-specific regression impact analysis
 - `$backend-implementer` for server-side implementation
 - `$frontend-implementer` for UI implementation
 - `$test-engineer` for validation
@@ -378,6 +406,8 @@ WA-SKILLS/
 ├── repo-architect/
 │   └── SKILL.md
 ├── agents-md-maintainer/
+│   └── SKILL.md
+├── feature-impact-reviewer/
 │   └── SKILL.md
 ├── backend-implementer/
 │   └── SKILL.md
