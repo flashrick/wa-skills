@@ -116,6 +116,8 @@ This repository is expected to follow a structure similar to:
 │   └── SKILL.md
 ├── agents-md-maintainer/
 │   └── SKILL.md
+├── plans-md-maintainer/
+│   └── SKILL.md
 ├── feature-impact-reviewer/
 │   └── SKILL.md
 ├── backend-implementer/

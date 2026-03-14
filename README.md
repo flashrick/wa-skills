@@ -18,6 +18,7 @@ It is designed to support a staged web-development workflow where different skil
 - UI/UX design
 - technical architecture
 - project-level agent operating rules
+- persistent execution planning across sessions
 - feature impact and regression analysis
 - backend implementation
 - frontend implementation
@@ -142,7 +143,28 @@ Do not use this skill for:
 
 ---
 
-### 5. `feature-impact-reviewer`
+### 5. `plans-md-maintainer`
+Responsible for:
+- creating a project-root `PLANS.md`
+- keeping multi-step project status, milestones, blockers, and next actions current across sessions
+- persisting accepted decisions and open questions after meaningful progress or routing changes
+
+Typical outputs:
+- `PLANS.md`
+
+Use this skill when:
+- the work spans multiple stages or sessions
+- the project needs a durable execution plan artifact
+- an existing `PLANS.md` is stale and needs to reflect current reality
+
+Do not use this skill for:
+- initial scope clarification before the work is real enough to sequence
+- real-time routing without updating a durable plan
+- feature implementation or testing work
+
+---
+
+### 6. `feature-impact-reviewer`
 Responsible for:
 - reviewing what an intended or completed feature change could break
 - identifying shared contracts, dependent behavior, and regression-sensitive edges
@@ -164,7 +186,7 @@ Do not use this skill for:
 
 ---
 
-### 6. `backend-implementer`
+### 7. `backend-implementer`
 Responsible for:
 - backend code
 - APIs
@@ -191,7 +213,7 @@ Do not use this skill for:
 
 ---
 
-### 7. `frontend-implementer`
+### 8. `frontend-implementer`
 Responsible for:
 - pages
 - components
@@ -218,7 +240,7 @@ Do not use this skill for:
 
 ---
 
-### 8. `test-engineer`
+### 9. `test-engineer`
 Responsible for:
 - adding or updating tests
 - running validation checks
@@ -246,7 +268,7 @@ Do not use this skill for:
 
 ---
 
-### 9. `deploy-readiness-check`
+### 10. `deploy-readiness-check`
 Responsible for:
 - deployment readiness review
 - environment/config completeness
@@ -270,7 +292,7 @@ Do not use this skill for:
 
 ---
 
-### 10. `workflow-orchestrator`
+### 11. `workflow-orchestrator`
 Responsible for:
 - deciding which skill should act next
 - enforcing stage order
@@ -305,10 +327,11 @@ Default web-project workflow:
 2. `uiux-designer`
 3. `repo-architect`
 4. `agents-md-maintainer` when the repository needs a durable Codex operating contract before implementation scales
-5. `backend-implementer`
-6. `frontend-implementer`
-7. `test-engineer`
-8. `deploy-readiness-check`
+5. `plans-md-maintainer` when the work should persist across sessions as a shared execution plan
+6. `backend-implementer`
+7. `frontend-implementer`
+8. `test-engineer`
+9. `deploy-readiness-check`
 
 `feature-impact-reviewer` is optional and fits around behavior-changing work:
 - before implementation to map regression risk
@@ -350,6 +373,7 @@ Examples:
 - `$uiux-designer` for visual system and layout direction
 - `$repo-architect` for technical planning
 - `$agents-md-maintainer` for project-root Codex operating rules
+- `$plans-md-maintainer` for project-root execution plan maintenance
 - `$feature-impact-reviewer` for change-specific regression impact analysis
 - `$backend-implementer` for server-side implementation
 - `$frontend-implementer` for UI implementation
@@ -407,6 +431,8 @@ WA-SKILLS/
 ├── repo-architect/
 │   └── SKILL.md
 ├── agents-md-maintainer/
+│   └── SKILL.md
+├── plans-md-maintainer/
 │   └── SKILL.md
 ├── feature-impact-reviewer/
 │   └── SKILL.md
