@@ -34,6 +34,7 @@ description: Implement client-side web feature work such as screens, components,
 
 - Frontend code changes for the targeted feature slice
 - Any necessary route, state, and client integration updates
+- Targeted `README.md` updates when the implemented change materially affects documented setup, usage, supported screens or flows, or developer-facing behavior
 - Focused notes on UX deviations, blockers, or contract assumptions
 - Explicit handoff notes for `test-engineer`
 
@@ -69,7 +70,13 @@ description: Implement client-side web feature work such as screens, components,
 - Review the result against the acceptance criteria and UX guidance.
 - Call out anything that remains unverified or any deliberate deviation.
 
-### 6. Prepare Handoff
+### 6. Sync Developer-Facing Docs
+
+- Update `README.md` when the frontend change makes current setup, usage, supported screens or flows, or developer-facing notes inaccurate.
+- Keep `README.md` changes narrow and factual.
+- Do not expand this into repository operating-rule maintenance; route Codex workflow or path-boundary changes to `agents-md-maintainer`.
+
+### 7. Prepare Handoff
 
 - Summarize what changed for `test-engineer`.
 - If implementation exposed unresolved UX ambiguity, state exactly what needs to return to `uiux-designer`.
@@ -138,6 +145,7 @@ Provide:
 - states and edge cases worth validating
 - setup or navigation prerequisites
 - any known gaps or temporary handling
+- note whether `README.md` was updated or intentionally left unchanged because the change did not affect documented usage
 
 Do not provide:
 

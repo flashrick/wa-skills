@@ -34,6 +34,7 @@ description: Implement server-side web feature work such as APIs, business logic
 
 - Backend code changes for the targeted feature slice
 - Any required schema or persistence updates
+- Targeted `README.md` updates when the implemented change materially affects documented setup, usage, supported behavior, or public integration expectations
 - Focused notes on contract changes, blockers, or assumptions that affect downstream work
 - Explicit handoff notes for `test-engineer` and, when relevant, `frontend-implementer`
 
@@ -69,7 +70,13 @@ description: Implement server-side web feature work such as APIs, business logic
 - Review the result against the acceptance criteria and known contracts.
 - Call out anything that remains unverified.
 
-### 6. Prepare Handoff
+### 6. Sync Developer-Facing Docs
+
+- Update `README.md` when the backend change makes current setup, usage, supported behavior, or public contract notes inaccurate.
+- Keep `README.md` changes narrow and factual.
+- Do not expand this into general repository rule maintenance; route repo-operating instruction changes to `agents-md-maintainer`.
+
+### 7. Prepare Handoff
 
 - Summarize what changed for `test-engineer`.
 - If frontend integration depends on new or changed behavior, state exactly what `frontend-implementer` can rely on.
@@ -155,6 +162,7 @@ Provide:
 - setup or data prerequisites
 - expected success and failure cases
 - any unverified edge cases or known limitations
+- note whether `README.md` was updated or intentionally left unchanged because the behavior was internal only
 
 Do not provide:
 

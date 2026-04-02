@@ -1,6 +1,6 @@
 # WA-SKILLS
 
-A reusable **Agent Skills** library for **Codex CLI** web-project workflows.
+A reusable **Agent Skills** library for **Codex CLI** web-project workflows and tightly scoped sidecar tasks.
 
 This repository contains a set of narrow, role-based skills designed to help structure and execute a web project through staged collaboration.
 
@@ -26,6 +26,7 @@ It is designed to support a staged web-development workflow where different skil
 - testing and validation
 - deployment readiness
 - workflow orchestration
+- colloquial Chinese to natural English translation when context-aware language adaptation is needed
 
 The goal is to keep each skill:
 - narrow
@@ -33,6 +34,8 @@ The goal is to keep each skill:
 - practical
 - easy to trigger correctly
 - easy to hand off to the next stage
+
+Most skills here support web-project execution directly. A small number of sidecar skills may support adjacent communication work when their scope is equally narrow and reusable.
 
 ---
 
@@ -127,6 +130,7 @@ Responsible for:
 - updating stale or generic `AGENTS.md` rules
 - documenting repo-specific commands, boundaries, and workflow guardrails for Codex
 - auditing whether repository instructions match the actual codebase
+- realigning `AGENTS.md` after implementation changes alter repo operating rules
 
 Typical outputs:
 - `AGENTS.md`
@@ -135,12 +139,14 @@ Use this skill when:
 - a project repository does not yet have `AGENTS.md`
 - Codex needs repo-specific operating instructions
 - existing agent guidance is outdated, vague, or contradictory
+- repository evolution made existing Codex operating rules stale
 
 Do not use this skill for:
 - product scoping
 - UI or architecture design
 - mainline feature implementation
 - release-readiness analysis
+- ordinary `README.md` maintenance that does not change Codex operating rules
 
 ---
 
@@ -218,10 +224,12 @@ Responsible for:
 - service logic
 - middleware
 - server-side integrations
+- targeted `README.md` sync when implementation changes documented usage or behavior
 
 Typical outputs:
 - backend code changes
 - migrations
+- targeted `README.md` updates when needed
 - implementation notes when needed
 
 Use this skill when:
@@ -234,6 +242,7 @@ Do not use this skill for:
 - UI design decisions
 - frontend rendering work
 - deployment readiness review
+- `AGENTS.md` maintenance unless repo operating rules changed and require `agents-md-maintainer`
 
 ---
 
@@ -245,10 +254,12 @@ Responsible for:
 - client-side state
 - forms and interactions
 - frontend API integration
+- targeted `README.md` sync when implementation changes documented usage or behavior
 
 Typical outputs:
 - frontend code changes
 - page and component implementation
+- targeted `README.md` updates when needed
 - implementation notes when needed
 
 Use this skill when:
@@ -261,6 +272,7 @@ Do not use this skill for:
 - redefining project scope
 - backend implementation
 - deployment review
+- `AGENTS.md` maintenance unless repo operating rules changed and require `agents-md-maintainer`
 
 ---
 
@@ -343,6 +355,29 @@ Do not use this skill for:
 
 ---
 
+### 13. `spoken-cn-to-natural-en-translator`
+Responsible for:
+- translating colloquial Chinese into natural English
+- adapting wording to English-first syntax and tone
+- inferring the correct technical or contextual term when Chinese wording is informal or imprecise
+- preserving intent instead of mirroring Chinese phrasing mechanically
+
+Typical outputs:
+- natural English translation
+- brief terminology or ambiguity notes only when needed
+
+Use this skill when:
+- spoken or chat-style Chinese should be translated into fluent English
+- literal translation would sound unnatural or misleading
+- domain terms or proper nouns need contextual normalization
+
+Do not use this skill for:
+- literal study-oriented translation
+- writing original English without Chinese source text
+- long-form English rewriting after translation is already settled
+
+---
+
 ## Recommended Stage Order
 
 Default web-project workflow:
@@ -357,6 +392,10 @@ Default web-project workflow:
 8. `test-engineer`
 9. `deploy-readiness-check`
 
+After implementation, revisit:
+- `backend-implementer` or `frontend-implementer` for targeted `README.md` sync when documented behavior or usage changed
+- `agents-md-maintainer` only when repo operating rules for Codex became stale
+
 `web-security-reviewer` is optional but recommended when work touches auth, permissions, sensitive data, external input, tenant boundaries, or release-critical security surfaces.
 
 `feature-impact-reviewer` is optional and fits around behavior-changing work:
@@ -368,6 +407,8 @@ Default web-project workflow:
 - verify whether a stage is complete
 - prevent premature execution
 - maintain handoff discipline
+
+`spoken-cn-to-natural-en-translator` is a sidecar language skill. It is used on demand when Chinese source text must become idiomatic English, and it is not part of the default web-project stage order.
 
 ---
 
@@ -399,14 +440,16 @@ Examples:
 - `$uiux-designer` for visual system and layout direction
 - `$repo-architect` for technical planning
 - `$agents-md-maintainer` for project-root Codex operating rules
+- `$agents-md-maintainer` again after repo-shape or workflow changes make `AGENTS.md` stale
 - `$plans-md-maintainer` for project-root execution plan maintenance
 - `$feature-impact-reviewer` for change-specific regression impact analysis
 - `$web-security-reviewer` for scoped application-security review
-- `$backend-implementer` for server-side implementation
-- `$frontend-implementer` for UI implementation
+- `$backend-implementer` for server-side implementation and targeted `README.md` sync when backend-facing usage changes
+- `$frontend-implementer` for UI implementation and targeted `README.md` sync when frontend-facing usage changes
 - `$test-engineer` for validation
 - `$deploy-readiness-check` for release preparation
 - `$workflow-orchestrator` for gating and routing
+- `$spoken-cn-to-natural-en-translator` for colloquial Chinese to idiomatic English translation
 
 ---
 
@@ -472,6 +515,8 @@ WA-SKILLS/
 ├── test-engineer/
 │   └── SKILL.md
 ├── deploy-readiness-check/
+│   └── SKILL.md
+├── spoken-cn-to-natural-en-translator/
 │   └── SKILL.md
 └── workflow-orchestrator/
     └── SKILL.md

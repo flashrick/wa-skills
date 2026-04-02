@@ -56,6 +56,7 @@ Trigger this skill when:
 - Codex has repeated repo-specific mistakes that suggest missing local operating guidance
 - the team wants repo-specific guardrails for commands, editing, workflow, or path boundaries
 - the repository has enough local context to infer durable operating rules
+- implementation or repository evolution changed commands, directory boundaries, generated areas, validation expectations, or workflow rules enough that existing `AGENTS.md` is now stale
 
 ---
 
@@ -67,6 +68,7 @@ Do not trigger this skill when:
 - the request is about global behavior across all repositories rather than repo-local guidance
 - there is no meaningful repository context and the user does not want a repo-grounded draft
 - the task belongs to another narrow skill such as planning, architecture, testing, or deployment readiness
+- the change is only about product or developer documentation such as `README.md` and does not alter how Codex should operate in the repository
 
 ---
 
@@ -102,6 +104,7 @@ Primary output:
 
 Secondary outputs:
 - removal or correction of stale, vague, or contradictory repo rules
+- targeted updates that keep `AGENTS.md` aligned after meaningful repository changes
 - a short change summary describing:
   - what was added
   - what was removed
@@ -289,6 +292,15 @@ Correct:
 - unsupported assumptions
 
 Prefer a smaller and accurate file over a larger speculative one.
+
+When the prompt follows implementation work, check whether the code changes altered:
+- how the repo is run
+- how it is tested
+- which paths are safe to edit
+- which generated or protected areas exist
+- which workflow rules Codex now needs to follow
+
+If none of those changed, do not force an `AGENTS.md` edit.
 
 ### 7. Produce A Change Summary
 
