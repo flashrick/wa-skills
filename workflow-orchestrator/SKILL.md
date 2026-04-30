@@ -127,6 +127,37 @@ Keep the status concrete:
 
 ## Gate Expectations
 
+### Immediate Coding Plan -> `task-plan-generator`
+
+Require:
+
+- concrete task prompt
+- known scope or safe assumptions
+- enough repository context to identify likely validation
+
+### Unfamiliar Code Area -> `codebase-recon`
+
+Require:
+
+- target repo, module, feature, bug area, or planned change
+- reason orientation is needed before implementation or review
+
+### Unknown Bug -> `bug-investigator`
+
+Require:
+
+- reported symptom or failing behavior
+- expected behavior if known
+- available logs, screenshots, failing tests, or reproduction notes
+
+### Broad Migration -> `codebase-migration-planner`
+
+Require:
+
+- target migration, upgrade, rename, or refactor goal
+- reason the change spans multiple files or modules
+- known compatibility constraints or validation expectations
+
 ### `project-manager` -> `uiux-designer`
 
 Require:
@@ -159,6 +190,30 @@ Require:
 - changed-area summary
 - known limitations or unverified areas
 
+### Implementation -> `code-reviewer`
+
+Require:
+
+- concrete diff, branch, PR, or changed files
+- intended behavior or acceptance criteria when available
+- known risky areas or reviewer focus if relevant
+
+### Failed Local Or CI Checks -> `ci-failure-triager`
+
+Require:
+
+- failing command, CI check, or log source
+- branch, PR, commit, or local environment context when available
+- whether the failure reproduces locally, if known
+
+### PR Feedback -> `pr-feedback-resolver`
+
+Require:
+
+- pasted comments, PR URL, review thread summary, or issue feedback
+- current branch or diff context when available
+- user selection if only some comments should be addressed
+
 ### `test-engineer` -> `deploy-readiness-check`
 
 Require:
@@ -170,6 +225,32 @@ Require:
 ## Optional Skill Routing
 
 These skills are sidecar or persistence skills, not mandatory core stages.
+
+### Route to `task-plan-generator`
+
+Use when:
+
+- a short-lived execution plan is needed for a specific coding task
+- the user asks for a plan before implementation
+- repository rules require a task plan artifact under `plan/`
+
+Do not route there when:
+
+- the work needs durable multi-session `PLANS.md` state
+- product scope is still unclear
+- the user needs immediate routing rather than a plan artifact
+
+### Route to `codebase-recon`
+
+Use when:
+
+- the agent needs read-first orientation before changing an unfamiliar or risky code area
+- local repo evidence such as structure, git churn, entry points, tests, or contracts should guide the next step
+
+Do not route there when:
+
+- the affected files are already obvious and small
+- the task is architecture design rather than current-state reconnaissance
 
 ### Route to `agents-md-maintainer`
 
@@ -196,6 +277,43 @@ Do not route there when:
 - the task is too small to justify persistent planning
 - the need is immediate routing only, not plan maintenance
 
+### Route to `bug-investigator`
+
+Use when:
+
+- a reported bug or failing behavior needs root-cause diagnosis before implementation
+- symptoms, logs, screenshots, or failing tests exist but the fix is not obvious
+- reproduction status or likely affected path is still unknown
+
+Do not route there when:
+
+- the fix is already known and implementation should proceed
+- the issue is specifically CI provider, runner, or workflow failure
+
+### Route to `codebase-migration-planner`
+
+Use when:
+
+- a migration, framework upgrade, dependency upgrade, API rename, or multi-file refactor needs batching
+- the change needs blast-radius analysis, codemod strategy, validation gates, or rollback planning
+
+Do not route there when:
+
+- ordinary feature architecture is the blocker
+- the change is small enough for direct implementation
+
+### Route to `code-reviewer`
+
+Use when:
+
+- a completed or in-progress code change needs engineering review
+- the user asks for a PR, patch, branch, or diff review
+- the concern is correctness, maintainability, contracts, or missing validation
+
+Do not route there when:
+
+- the review is security-specific, regression-impact-specific, or deploy-readiness-specific
+
 ### Route to `feature-impact-reviewer`
 
 Use when:
@@ -208,6 +326,30 @@ Do not route there when:
 
 - the change is purely cosmetic or obviously isolated
 - the real need is broad architecture work or actual test execution
+
+### Route to `ci-failure-triager`
+
+Use when:
+
+- CI, PR checks, GitHub Actions, or remote build/test jobs are failing
+- logs must be collected and classified before deciding whether the fix is code, test, dependency, environment, or workflow config
+
+Do not route there when:
+
+- the failure is already reproduced locally and needs normal bug investigation
+- the user only wants new tests or local validation
+
+### Route to `pr-feedback-resolver`
+
+Use when:
+
+- the user wants PR review comments, requested changes, or issue feedback addressed
+- comments need to be inventoried, grouped, selected, fixed, and replied to
+
+Do not route there when:
+
+- the user asks for a fresh code review rather than resolving supplied feedback
+- the main issue is CI failure rather than review comments
 
 ### Route to `web-security-reviewer`
 

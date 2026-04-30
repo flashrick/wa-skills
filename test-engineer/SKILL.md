@@ -70,16 +70,28 @@ description: Add or refine automated tests and targeted quality checks for speci
 - Categorize failures as product bug, test issue, environment issue, or unclear expectation.
 - Keep confirmed failures separate from hypotheses.
 
-### 5. Summarize Verification Status
+### 5. Use Browser Verification When Rendering Matters
+
+- Use browser-level checks when the risk depends on real rendering, JavaScript execution, routing, focus, overlays, viewport behavior, or clickability.
+- For static HTML, inspect the file first and then verify selectors or user-visible output in the browser when needed.
+- For dynamic apps, confirm whether the dev server is already running. If not, use the repo's documented dev command or existing helper scripts to manage server lifecycle.
+- Wait for the rendered app to settle before inspecting DOM or taking screenshots; prefer network-idle, a stable route marker, or a visible UI selector over arbitrary sleeps.
+- Use a reconnaissance-then-action flow: load the page, capture screenshot or console errors if useful, inspect rendered selectors, then perform the user action.
+- Record evidence in the verification summary: viewport, URL, screenshot path when created, console errors, blocked controls, or the selector/action that failed.
+- Do not add Playwright or another browser framework to the project only for a narrow check unless the user approved that dependency change.
+
+### 6. Summarize Verification Status
 
 - State what passed, what failed, and what was not tested.
 - Tie gaps back to user-visible or contract-level risk.
 - Make browser-only gaps explicit, such as unverified clickability, responsive layout, focus handling, or overlay behavior.
 - Do not hide uncertainty behind a generic green or red summary.
 
-### 6. Prepare Handoff
+### 7. Prepare Handoff
 
 - Route actionable failures back to `backend-implementer` or `frontend-implementer`.
+- Route unclear root-cause failures to `bug-investigator`.
+- Route CI-only or remote-check failures to `ci-failure-triager`.
 - When validation is sufficiently complete, hand the release-risk picture to `deploy-readiness-check`.
 
 ## Questioning Strategy
@@ -182,4 +194,6 @@ Do not provide:
 - Owning deployment assessment
 - Running broad organizational QA process outside the scoped behavior
 - Running broad manual browser exploration when a narrow targeted check would answer the question
+- Diagnosing CI provider configuration or remote runner failures; use `ci-failure-triager`
+- Performing open-ended bug investigation when the root cause is unknown; use `bug-investigator`
 - Hiding validation gaps behind incomplete summaries

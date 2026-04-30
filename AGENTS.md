@@ -118,6 +118,14 @@ This repository is expected to follow a structure similar to:
 │   └── SKILL.md
 ├── plans-md-maintainer/
 │   └── SKILL.md
+├── task-plan-generator/
+│   └── SKILL.md
+├── codebase-recon/
+│   └── SKILL.md
+├── codebase-migration-planner/
+│   └── SKILL.md
+├── bug-investigator/
+│   └── SKILL.md
 ├── feature-impact-reviewer/
 │   └── SKILL.md
 ├── web-security-reviewer/
@@ -126,9 +134,17 @@ This repository is expected to follow a structure similar to:
 │   └── SKILL.md
 ├── frontend-implementer/
 │   └── SKILL.md
+├── code-reviewer/
+│   └── SKILL.md
 ├── test-engineer/
 │   └── SKILL.md
+├── ci-failure-triager/
+│   └── SKILL.md
+├── pr-feedback-resolver/
+│   └── SKILL.md
 ├── deploy-readiness-check/
+│   └── SKILL.md
+├── spoken-cn-to-natural-en-translator/
 │   └── SKILL.md
 └── workflow-orchestrator/
     └── SKILL.md
