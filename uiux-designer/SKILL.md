@@ -34,6 +34,8 @@ description: Define web UI flows, interaction states, layout intent, and visual 
 
 - A feature design brief with flow, screens, states, and interaction notes
 - Visual direction guidance tied to the feature
+- A lightweight design-system brief when the feature needs reusable visual rules
+- UI quality gates covering accessibility, interaction, responsive behavior, and visual consistency
 - A reusable component and state inventory for implementation
 - Explicit handoff notes for `frontend-implementer`
 
@@ -68,8 +70,36 @@ description: Define web UI flows, interaction states, layout intent, and visual 
 - Define tone, density, hierarchy, and interaction feel at a practical level.
 - Reuse existing product patterns when they exist.
 - Avoid drifting into a full design system unless the feature truly needs it.
+- When a feature needs a reusable visual baseline, produce a lightweight design-system brief before implementation:
+  - product or workflow type and target audience
+  - page or flow pattern, such as data-dense dashboard, trust-building onboarding, editorial content, or conversion-focused landing
+  - color role guidance using semantic roles, not only raw hex values
+  - typography scale and density expectations
+  - spacing rhythm, responsive breakpoints, and layout constraints
+  - motion, feedback, and state principles
+  - anti-patterns that would hurt this product type
+- Use a domain decision matrix when the design is under-specified:
+  - product: user intent, trust level, data density, and expected workflow pace
+  - style: visual language that fits the product type and avoids trend mismatch
+  - color: semantic roles, contrast needs, brand constraints, and theme behavior
+  - typography: hierarchy, reading density, label legibility, and platform fit
+  - layout: page pattern, navigation model, responsive structure, and content priority
+  - interaction: feedback timing, focus behavior, gestures, and state transitions
+  - data visualization: chart type, legend, tooltip, empty state, and color-not-only requirements
 
-### 6. Prepare Handoff
+### 6. Define UI Quality Gates
+
+- Set concrete acceptance checks for the UI direction before handing off.
+- Include only checks that matter to the scoped feature; do not paste a generic checklist.
+- Consider these categories:
+  - accessibility: contrast, keyboard path, labels for icon-only controls, heading order, reduced motion
+  - interaction: visible hover/pressed/focus/disabled states, predictable feedback, no layout-shifting state changes
+  - responsive layout: small mobile, tablet, desktop, no horizontal scroll, text does not overflow controls
+  - visual consistency: semantic tokens, icon family consistency, spacing rhythm, clear hierarchy
+  - content states: loading, empty, error, success, permissions, and destructive-confirmation states
+- Mark any gate that needs browser validation so `test-engineer` can verify it later.
+
+### 7. Prepare Handoff
 
 - Package the flow, screen guidance, component inventory, and unresolved questions for `frontend-implementer`.
 - If implementation reveals a structural repo concern rather than a design issue, route that question to `repo-architect`.
@@ -125,9 +155,24 @@ When producing a design artifact, prefer this structure:
 - Interaction notes
 - Responsive notes
 
+## Design System Brief
+- Pattern or layout model
+- Semantic color roles
+- Typography and density
+- Spacing and responsive rules
+- Motion and feedback rules
+- Anti-patterns to avoid
+
 ## Components
 - Reusable components
 - Variants and state requirements
+
+## UI Quality Gates
+- Accessibility checks
+- Interaction checks
+- Responsive checks
+- Visual consistency checks
+- Browser validation needs
 
 ## Handoff Notes
 - What `frontend-implementer` should follow strictly
@@ -150,6 +195,8 @@ Provide:
 - screen purpose and priority actions
 - required states and validation behavior
 - reusable components and interaction rules
+- design-system brief details that should become tokens, reusable styles, or component variants
+- feature-specific UI quality gates and browser-validation needs
 - constraints that must remain intact during implementation
 
 Do not provide:

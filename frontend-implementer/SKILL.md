@@ -34,6 +34,7 @@ description: Implement client-side web feature work such as screens, components,
 
 - Frontend code changes for the targeted feature slice
 - Any necessary route, state, and client integration updates
+- UI implementation that preserves the design brief, semantic tokens, responsive rules, and interaction states
 - Targeted `README.md` updates when the implemented change materially affects documented setup, usage, supported screens or flows, or developer-facing behavior
 - Focused notes on UX deviations, blockers, or contract assumptions
 - Explicit handoff notes for `test-engineer`
@@ -63,20 +64,41 @@ description: Implement client-side web feature work such as screens, components,
 - Make the minimum frontend changes required for the scoped behavior.
 - Follow the approved flow, states, and component intent.
 - Keep loading, empty, error, and success behavior explicit when relevant.
+- Convert design guidance into maintainable implementation primitives where the repo supports it:
+  - use semantic tokens or existing theme variables before adding one-off colors
+  - keep typography, spacing, radius, shadows, and z-index values consistent with nearby patterns
+  - use a consistent icon family and avoid emoji as structural UI icons
+  - preserve visible hover, pressed, focus, active, loading, disabled, and error states
+  - avoid interaction styles that resize controls, shift surrounding layout, or obscure content
+  - respect reduced-motion settings when adding motion
+- If the design brief includes a page-specific rule, keep it local; if the rule is reused across screens, route or implement it through the existing shared styling/component layer.
 
-### 5. Verify The Behavior
+### 5. Check UI Fidelity And Browser Risk
+
+- Compare the implementation against the UX brief before handing off.
+- Verify text fits within buttons, tabs, cards, tables, sidebars, and compact panels at relevant viewport widths.
+- Check that fixed or sticky UI does not hide scroll content, toasts, menus, modals, or bottom actions.
+- Treat these as browser-level verification triggers:
+  - overlays, dialogs, drawers, popovers, dropdowns, sticky headers, sticky footers, or z-index changes
+  - responsive layout changes across mobile, tablet, and desktop
+  - pointer, keyboard, focus, hover, drag, or touch interactions
+  - animation or transition behavior
+  - charts, canvases, media, or visual assets that must actually render
+- When browser tooling is available and the feature depends on these risks, run the narrowest practical browser check or tell `test-engineer` exactly what remains unverified.
+
+### 6. Verify The Behavior
 
 - Run relevant frontend checks when available.
 - Review the result against the acceptance criteria and UX guidance.
 - Call out anything that remains unverified or any deliberate deviation.
 
-### 6. Sync Developer-Facing Docs
+### 7. Sync Developer-Facing Docs
 
 - Update `README.md` when the frontend change makes current setup, usage, supported screens or flows, or developer-facing notes inaccurate.
 - Keep `README.md` changes narrow and factual.
 - Do not expand this into repository operating-rule maintenance; route Codex workflow or path-boundary changes to `agents-md-maintainer`.
 
-### 7. Prepare Handoff
+### 8. Prepare Handoff
 
 - Summarize what changed for `test-engineer`.
 - If implementation exposed unresolved UX ambiguity, state exactly what needs to return to `uiux-designer`.
@@ -119,6 +141,12 @@ When summarizing frontend work, prefer this structure:
 - Key flows
 - Important states
 - Contract assumptions
+- Design brief fidelity
+
+## Browser Risk Notes
+- Viewports or device classes affected
+- Overlays, sticky elements, focus paths, animation, charts, media, or visual assets touched
+- UI quality gates still needing evidence
 
 ## Validation
 - Checks run
@@ -143,6 +171,8 @@ Provide:
 
 - changed user-visible behaviors
 - states and edge cases worth validating
+- browser-risk areas such as overlays, responsive layout, focus, animation, or visual assets
+- any UI quality gates from `uiux-designer` that still need evidence
 - setup or navigation prerequisites
 - any known gaps or temporary handling
 - note whether `README.md` was updated or intentionally left unchanged because the change did not affect documented usage

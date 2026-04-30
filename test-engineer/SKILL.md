@@ -27,6 +27,7 @@ description: Add or refine automated tests and targeted quality checks for speci
 
 - Acceptance criteria or intended behavior
 - Implementation summary or changed areas
+- UI quality gates or design-system brief from `uiux-designer`, when relevant
 - Relevant test commands and repo conventions
 - Existing browser automation setup such as Playwright, if present
 - Known setup, fixtures, or environment constraints
@@ -54,6 +55,7 @@ description: Add or refine automated tests and targeted quality checks for speci
 - Find the closest existing test style and helpers.
 - For frontend work, check whether the repo already uses browser automation such as Playwright before inventing a new approach.
 - Reuse test structure and fixtures unless there is a clear reason not to.
+- If UI/UX quality is in scope, map the supplied design gates to concrete checks rather than reviewing taste broadly.
 
 ### 3. Add Or Refine Targeted Coverage
 
@@ -62,7 +64,19 @@ description: Add or refine automated tests and targeted quality checks for speci
 - When frontend changes affect layout, layering, hover states, dialogs, drawers, sticky elements, or responsive behavior, prefer a browser-level check over DOM-only assumptions.
 - Keep the scope tight instead of expanding into a full-suite rewrite.
 
-### 4. Run Focused Checks
+### 4. Validate UI And UX Quality Gates
+
+- For UI-facing work, check the highest-risk gates from the design or implementation handoff.
+- Prefer evidence that proves user-visible behavior:
+  - accessibility: labels for icon-only controls, focus order, keyboard access, contrast-sensitive states when tooling supports it
+  - interaction: hover, pressed, disabled, loading, error, success, and focus states are visible and do not shift layout unexpectedly
+  - responsive layout: small mobile, tablet, and desktop widths where the changed UI can reflow
+  - visual assets: icons, images, charts, canvas, and media render rather than leaving blank or broken regions
+  - overflow: long labels, localized text, validation messages, and dynamic values fit without overlapping nearby content
+  - motion: reduced-motion behavior is respected when animation affects the interaction
+- Do not create a broad design critique unless the user requested one; validate the specific gates tied to the change.
+
+### 5. Run Focused Checks
 
 - Execute the most relevant validation commands available.
 - Prefer existing repo test commands first. If browser interaction is the real risk and Playwright or equivalent browser automation is available, use it for the narrowest realistic check.
@@ -70,7 +84,7 @@ description: Add or refine automated tests and targeted quality checks for speci
 - Categorize failures as product bug, test issue, environment issue, or unclear expectation.
 - Keep confirmed failures separate from hypotheses.
 
-### 5. Use Browser Verification When Rendering Matters
+### 6. Use Browser Verification When Rendering Matters
 
 - Use browser-level checks when the risk depends on real rendering, JavaScript execution, routing, focus, overlays, viewport behavior, or clickability.
 - For static HTML, inspect the file first and then verify selectors or user-visible output in the browser when needed.
@@ -80,14 +94,14 @@ description: Add or refine automated tests and targeted quality checks for speci
 - Record evidence in the verification summary: viewport, URL, screenshot path when created, console errors, blocked controls, or the selector/action that failed.
 - Do not add Playwright or another browser framework to the project only for a narrow check unless the user approved that dependency change.
 
-### 6. Summarize Verification Status
+### 7. Summarize Verification Status
 
 - State what passed, what failed, and what was not tested.
 - Tie gaps back to user-visible or contract-level risk.
 - Make browser-only gaps explicit, such as unverified clickability, responsive layout, focus handling, or overlay behavior.
 - Do not hide uncertainty behind a generic green or red summary.
 
-### 7. Prepare Handoff
+### 8. Prepare Handoff
 
 - Route actionable failures back to `backend-implementer` or `frontend-implementer`.
 - Route unclear root-cause failures to `bug-investigator`.
@@ -133,6 +147,15 @@ When producing a validation artifact, prefer this structure:
 - Commands executed
 - Scope of validation
 - Browser or viewport coverage when relevant
+- UI quality gates checked
+
+## Browser Evidence
+- URL or route
+- Viewport
+- Selector or user action
+- Observed result
+- Screenshot, console errors, or artifact path when useful
+- Unverified browser-risk items
 
 ## Results
 - Passed

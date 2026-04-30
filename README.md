@@ -81,9 +81,11 @@ Responsible for:
 - visual direction
 - layout structure
 - design system direction
+- lightweight design-system briefs for scoped features
 - component appearance
 - interaction style
 - page structure
+- UI quality gates for accessibility, interaction, responsiveness, and visual consistency
 
 Typical outputs:
 - `docs/ui-style-guide.md`
@@ -94,6 +96,7 @@ Use this skill when:
 - color, style, or layout needs to be decided
 - pages and components need visual rules
 - the interaction feel should be defined before implementation
+- a feature needs concrete UI acceptance gates before frontend work starts
 
 Do not use this skill for:
 - business logic planning
@@ -355,6 +358,8 @@ Responsible for:
 - client-side state
 - forms and interactions
 - frontend API integration
+- preserving design-system guidance, semantic tokens, responsive behavior, and interaction states in code
+- identifying browser-level rendering or clickability risks for validation
 - targeted `README.md` sync when implementation changes documented usage or behavior
 
 Typical outputs:
@@ -367,6 +372,7 @@ Use this skill when:
 - UI should be implemented in code
 - routes and components need to be built
 - client-side integration with backend is required
+- a design brief or UI quality gate needs to become working browser behavior
 
 Do not use this skill for:
 - collecting design preferences
@@ -409,6 +415,7 @@ Responsible for:
 - triaging failures
 - identifying regressions
 - performing browser-level interaction checks for frontend regression risks when needed
+- validating UI quality gates such as accessibility, responsive layout, interaction states, overflow, and rendered visual assets
 - reporting validation status
 - highlighting coverage gaps
 
@@ -421,6 +428,7 @@ Use this skill when:
 - tests should be added or fixed
 - failures need classification
 - release confidence is unclear
+- a frontend change needs evidence that design and interaction gates still hold in real rendering
 
 Do not use this skill for:
 - main feature planning
@@ -577,6 +585,12 @@ After implementation, revisit:
 - `agents-md-maintainer` only when repo operating rules for Codex became stale
 - `code-reviewer` when correctness, maintainability, contracts, or missing validation need a focused review
 - `pr-feedback-resolver` when review comments or requested changes need to be closed out
+
+For UI-heavy frontend work, use a stricter handoff:
+- `uiux-designer` defines the design-system brief and feature-specific UI quality gates.
+- `frontend-implementer` implements those gates through existing components, tokens, responsive rules, and browser-facing interactions.
+- `test-engineer` validates the risky gates with targeted tests or browser evidence when rendering, focus, overlays, animation, assets, or responsive behavior matter.
+- `workflow-orchestrator` should preserve that UI quality contract when checking stage readiness.
 
 `web-security-reviewer` is optional but recommended when work touches auth, permissions, sensitive data, external input, tenant boundaries, or release-critical security surfaces.
 

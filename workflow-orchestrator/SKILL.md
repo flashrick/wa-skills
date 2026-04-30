@@ -172,6 +172,8 @@ Require:
 
 - defined user flows or screen intent
 - required states and interaction expectations
+- design-system brief when reusable UI rules are needed
+- feature-specific UI quality gates when the feature is UI-heavy
 - constraints that affect structure or implementation
 
 ### `repo-architect` -> `backend-implementer` / `frontend-implementer`
@@ -188,6 +190,8 @@ Require:
 
 - implemented behavior to validate
 - changed-area summary
+- UI quality gates that still need evidence, when relevant
+- browser-risk notes for overlays, responsive layout, focus, animation, charts, media, or visual assets
 - known limitations or unverified areas
 
 ### Implementation -> `code-reviewer`
