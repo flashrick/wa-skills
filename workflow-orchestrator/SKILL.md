@@ -1,6 +1,6 @@
 ---
 name: workflow-orchestrator
-description: Coordinate multi-skill web-project execution by assigning stage order, handoffs, and parallel work boundaries across specialized skills.
+description: Coordinate multi-skill web-project execution by assigning stage order, handoffs, and parallel work boundaries across specialized skills, including safe-change, domain-modeling, and reliability review stages.
 ---
 
 # Workflow Orchestrator
@@ -9,6 +9,7 @@ description: Coordinate multi-skill web-project execution by assigning stage ord
 
 - Coordinates the order of specialized web-project skills.
 - Checks whether handoffs are complete enough for the next stage.
+- Distinguishes modeling, structure, safe-change preparation, implementation, validation, reliability review, and deploy review so they do not collapse into one vague step.
 - Recommends the next skill and any safe parallel work boundaries without doing that skill's content work.
 
 ## When It Should Trigger
@@ -158,6 +159,22 @@ Require:
 - reason the change spans multiple files or modules
 - known compatibility constraints or validation expectations
 
+### Unstable Domain Semantics -> `domain-modeler`
+
+Require:
+
+- a scoped feature or domain area
+- evidence that business language, ownership, aggregates, or context boundaries are still unstable
+- enough scope context to keep modeling bounded
+
+### Risky Existing-Code Change -> `safe-change-planner`
+
+Require:
+
+- a known change target or known bug fix target
+- evidence that the code is weakly tested, legacy, tightly coupled, or otherwise risky to change directly
+- any investigation notes that already narrowed the code path
+
 ### `project-manager` -> `uiux-designer`
 
 Require:
@@ -183,6 +200,7 @@ Require:
 - clear module or ownership boundaries
 - known interface seams
 - dependency-aware implementation order
+- domain-model guidance first when structure depends on business semantics
 
 ### Implementation -> `test-engineer`
 
@@ -217,6 +235,14 @@ Require:
 - pasted comments, PR URL, review thread summary, or issue feedback
 - current branch or diff context when available
 - user selection if only some comments should be addressed
+
+### Runtime Risk Review -> `reliability-reviewer`
+
+Require:
+
+- a scoped service, API, job, queue, or integration path
+- known runtime or dependency surfaces worth reviewing
+- enough context to distinguish resilience design from release paperwork
 
 ### `test-engineer` -> `deploy-readiness-check`
 
@@ -306,6 +332,32 @@ Do not route there when:
 - ordinary feature architecture is the blocker
 - the change is small enough for direct implementation
 
+### Route to `domain-modeler`
+
+Use when:
+
+- business terms, ownership, aggregates, or context boundaries are the real blocker
+- architecture would be premature without clearer domain semantics
+- existing code or docs show inconsistent language across the same feature area
+
+Do not route there when:
+
+- the domain is already stable and the remaining work is codebase structure only
+- the request is really about product scope or repository layout
+
+### Route to `safe-change-planner`
+
+Use when:
+
+- the root cause or requested change is known, but the code is risky to change safely
+- characterization coverage, seam planning, or preparatory refactoring is needed before implementation
+- the team must keep behavior change separate from structural cleanup
+
+Do not route there when:
+
+- the issue still needs root-cause diagnosis
+- the change is a broad migration rather than a scoped risky edit
+
 ### Route to `code-reviewer`
 
 Use when:
@@ -366,6 +418,19 @@ Do not route there when:
 
 - the task is visual-only or otherwise has no meaningful security surface
 - the request is really for infrastructure security architecture or formal penetration testing
+
+### Route to `reliability-reviewer`
+
+Use when:
+
+- a service, API, job, queue, cache, or integration needs focused resilience review
+- timeout, retry, degraded-mode, saturation, observability, or operational-safety decisions are still unclear
+- release confidence depends on runtime failure behavior, not just feature correctness
+
+Do not route there when:
+
+- the task is a final deploy gate rather than a resilience design review
+- the path has no meaningful runtime or dependency failure surface
 
 ## Non-Goals
 

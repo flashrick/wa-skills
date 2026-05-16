@@ -9,6 +9,7 @@ description: Review a web project for pre-deploy readiness across configuration,
 
 - Reviews whether a web project is ready for a deployment decision.
 - Checks configuration, migrations, operational assumptions, rollback posture, and release-risk gaps.
+- Consumes reliability findings when resilience design is part of release confidence.
 - Produces a practical readiness summary that makes blockers and unknowns explicit.
 
 ## When It Should Trigger
@@ -21,11 +22,13 @@ description: Review a web project for pre-deploy readiness across configuration,
 - The task is mainly about feature scoping, design work, primary implementation, or core testing execution.
 - The real blocker is still missing implementation or validation rather than deploy review.
 - The request is for infrastructure design rather than readiness assessment.
+- The real blocker is unresolved failure semantics, timeout, retry, saturation, or operational-safety design; use `reliability-reviewer`.
 
 ## Expected Inputs
 
 - Implementation summary and changed behavior
 - Test or verification summary
+- Reliability review summary when runtime resilience is part of release risk
 - Deployment target assumptions
 - Runtime configuration and environment expectations
 - Migration, observability, and rollback context if available
@@ -57,6 +60,7 @@ description: Review a web project for pre-deploy readiness across configuration,
 - Review migrations, seed data, and backward-compatibility risks.
 - Review build, startup, health visibility, and observability expectations.
 - Review rollback posture and release-blocking unknowns.
+- When resilience is already under review, distinguish solved reliability design issues from deploy-time rollout and evidence gaps.
 
 ### 4. Classify Findings
 
@@ -74,6 +78,7 @@ description: Review a web project for pre-deploy readiness across configuration,
 
 - Route code or config blockers back to the relevant implementation skill.
 - Route unresolved validation gaps back to `test-engineer`.
+- Route unresolved resilience-design blockers to `reliability-reviewer`.
 - Route cross-skill sequencing issues to `workflow-orchestrator` when coordination is the real problem.
 
 ## Questioning Strategy
@@ -168,6 +173,14 @@ Provide only when coordination is the blocker:
 - current readiness status
 - which prerequisite stage is incomplete
 - what output is missing before deploy review can conclude
+
+### To `reliability-reviewer`
+
+Provide:
+
+- the runtime path or dependency surface that still lacks explicit failure-mode decisions
+- which missing resilience decisions block release confidence
+- any evidence already gathered so the review stays scoped
 
 ## Non-Goals
 

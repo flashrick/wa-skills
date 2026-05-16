@@ -1,6 +1,6 @@
 ---
 name: repo-architect
-description: Define repository layout, module boundaries, ownership lines, and interface seams for a web project codebase.
+description: Define repository layout, module boundaries, ownership lines, and interface seams for a web project codebase once core domain semantics are stable enough to structure safely.
 ---
 
 # Repo Architect
@@ -8,6 +8,7 @@ description: Define repository layout, module boundaries, ownership lines, and i
 ## What It Does
 
 - Turns scoped feature requirements into a concrete codebase shape.
+- Consumes upstream domain-model guidance when business semantics materially affect structure.
 - Defines repository layout, module boundaries, ownership lines, and interface seams.
 - Produces architecture artifacts that implementation skills can follow without inventing structure ad hoc.
 
@@ -15,17 +16,20 @@ description: Define repository layout, module boundaries, ownership lines, and i
 
 - A web project or major feature needs repository structure, boundary decisions, or interface planning before implementation.
 - Backend and frontend work would drift without clear ownership and seams.
+- The domain model is already stable enough, or the work is simple enough, that structural design can proceed safely.
 
 ## When It Should Not Trigger
 
 - The task is mainly about product scoping, UI design, direct coding, test execution, or deploy review.
 - The repo structure is already stable enough and the work is routine implementation.
 - The request is really about endpoint behavior or UI flow rather than codebase boundaries.
+- Core domain language, aggregate boundaries, or context relationships are still the real blocker; use `domain-modeler`.
 
 ## Expected Inputs
 
 - Scoped feature or project brief
 - Acceptance criteria
+- Domain-model guidance when business-complex features are involved
 - UX guidance if user-facing flows already exist
 - Existing repository context if any
 - Known stack assumptions and integration constraints
@@ -36,6 +40,7 @@ description: Define repository layout, module boundaries, ownership lines, and i
 - Defined interface seams between layers or services
 - A dependency-aware implementation order for backend and frontend work
 - Explicit handoff notes for `backend-implementer` and `frontend-implementer`
+- A redirect to `domain-modeler` when unresolved business semantics would make the structure premature
 
 ## Workflow
 
@@ -44,6 +49,7 @@ description: Define repository layout, module boundaries, ownership lines, and i
 - Restate what the codebase must support.
 - Identify whether this is greenfield structure, feature expansion, refactor boundary work, or integration layering.
 - Separate fixed constraints from open architectural decisions.
+- Make explicit whether domain semantics are already settled enough to structure safely.
 
 ### 2. Inspect the Existing Shape
 
@@ -56,6 +62,7 @@ description: Define repository layout, module boundaries, ownership lines, and i
 - Decide which modules, packages, services, or layers own which responsibilities.
 - Clarify what crosses boundaries: APIs, events, shared types, adapters, or data contracts.
 - Keep boundaries understandable to implementers, not just theoretically clean.
+- Preserve upstream domain-model ownership instead of letting persistence or transport details redefine it.
 
 ### 4. Define the Interface Seams
 
@@ -73,6 +80,7 @@ description: Define repository layout, module boundaries, ownership lines, and i
 
 - Hand backend-facing structure and contracts to `backend-implementer`.
 - Hand frontend-facing structure and contracts to `frontend-implementer`.
+- If business language, aggregates, invariants, or context boundaries are still unstable, redirect to `domain-modeler` before locking structure.
 - If the real gap is still in user flow or page behavior, redirect to `uiux-designer` instead of forcing architecture prematurely.
 
 ## Questioning Strategy
@@ -81,6 +89,7 @@ description: Define repository layout, module boundaries, ownership lines, and i
 - Start from the existing repo and stated constraints before asking for preferences.
 - Prefer confirming a proposed structure over asking open-ended architecture brainstorming questions.
 - Treat unclear product scope as a blocker to raise back to `project-manager`, not a reason to broaden this skill.
+- Treat unclear domain language or domain ownership as a blocker to raise to `domain-modeler`, not a reason to force architecture from technical shape alone.
 
 Use questions like these when needed:
 
@@ -93,6 +102,7 @@ Use questions like these when needed:
 Avoid questions like these unless the user explicitly asks for that depth:
 
 - broad feature discovery questions owned by `project-manager`
+- domain-language and aggregate-definition questions owned by `domain-modeler`
 - visual or flow design questions owned by `uiux-designer`
 - endpoint implementation details owned by implementation skills
 
@@ -141,7 +151,7 @@ Provide:
 
 - backend-owned modules or services
 - interface seams and data boundaries
-- constraints on models, adapters, or integrations
+- domain-model constraints that structure must preserve
 - dependency order and blocked areas
 
 Do not provide:
@@ -157,6 +167,7 @@ Provide:
 - frontend-owned modules or areas
 - shared contract expectations
 - integration boundaries with backend or platform code
+- any domain-model constraints that affect client concepts or shared types
 - any sequencing constraints that affect client work
 
 Do not provide:

@@ -22,6 +22,7 @@ description: Diagnose a reported bug or failing behavior by reproducing it, narr
 ## When It Should Not Trigger
 
 - The fix is already obvious and implementation can start directly.
+- The root cause is known and the remaining challenge is changing fragile or weakly tested code safely; use `safe-change-planner`.
 - The task is mainly adding tests; use `test-engineer`.
 - The task is mainly reviewing a completed diff; use `code-reviewer`.
 - The task is specifically CI infrastructure or workflow failure; use `ci-failure-triager`.
@@ -40,6 +41,7 @@ description: Diagnose a reported bug or failing behavior by reproducing it, narr
 - Evidence gathered: commands, logs, traces, screenshots, or code paths inspected.
 - Root cause or ranked hypotheses with confidence.
 - Minimal fix route and owner skill.
+- A handoff to `safe-change-planner` when the code path is understood but still risky to change directly.
 - Verification targets that prove the bug is fixed and does not regress.
 
 ## Workflow
@@ -72,7 +74,7 @@ description: Diagnose a reported bug or failing behavior by reproducing it, narr
 
 - Identify whether the fix belongs to `backend-implementer`, `frontend-implementer`, configuration, data repair, or tests.
 - Describe the smallest code or data area likely to change.
-- Call out risks that need `feature-impact-reviewer`, `web-security-reviewer`, or `test-engineer`.
+- Call out risks that need `safe-change-planner`, `feature-impact-reviewer`, `web-security-reviewer`, or `test-engineer`.
 
 ## Output Shape
 
@@ -117,6 +119,12 @@ Provide:
 - the likely files or functions
 - the exact condition that triggers the bug
 - expected post-fix behavior
+
+Route to `safe-change-planner` when:
+
+- the root cause is known but tests are weak or missing
+- hidden dependencies, globals, or framework coupling make the fix unsafe to apply directly
+- the change needs behavior-to-preserve and seam planning before coding
 
 ### To `test-engineer`
 

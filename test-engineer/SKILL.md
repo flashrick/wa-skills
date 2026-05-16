@@ -9,6 +9,7 @@ description: Add or refine automated tests and targeted quality checks for speci
 
 - Validates implemented web-project behavior with targeted tests and quality checks.
 - Adds or refines automated coverage around the changed behavior.
+- Supports characterization tests when a safe-change plan requires current behavior to be captured before semantics change.
 - Uses browser-level checks for frontend interaction regressions when layout, overlays, positioning, or hit-target behavior may break user flows.
 - Produces a clear verification summary that distinguishes confirmed behavior, failures, and remaining risk.
 
@@ -27,6 +28,7 @@ description: Add or refine automated tests and targeted quality checks for speci
 
 - Acceptance criteria or intended behavior
 - Implementation summary or changed areas
+- `safe-change-planner` output when behavior-preservation or characterization coverage matters
 - UI quality gates or design-system brief from `uiux-designer`, when relevant
 - Relevant test commands and repo conventions
 - Existing browser automation setup such as Playwright, if present
@@ -48,6 +50,7 @@ description: Add or refine automated tests and targeted quality checks for speci
 - Restate the behavior being validated.
 - Identify the highest-risk paths, regressions, and boundary cases.
 - Distinguish what is already implemented from what is still only planned.
+- Distinguish whether the primary need is characterization of current behavior, proof of intended new behavior, or both.
 
 ### 2. Inspect Existing Coverage
 
@@ -60,6 +63,7 @@ description: Add or refine automated tests and targeted quality checks for speci
 ### 3. Add Or Refine Targeted Coverage
 
 - Write tests around the changed behavior, not around unrelated areas.
+- When working from a safe-change plan, keep characterization tests separate in intent from post-change regression coverage.
 - Prefer coverage that proves acceptance criteria, failure behavior, and regression-sensitive paths.
 - When frontend changes affect layout, layering, hover states, dialogs, drawers, sticky elements, or responsive behavior, prefer a browser-level check over DOM-only assumptions.
 - Keep the scope tight instead of expanding into a full-suite rewrite.
@@ -97,6 +101,7 @@ description: Add or refine automated tests and targeted quality checks for speci
 ### 7. Summarize Verification Status
 
 - State what passed, what failed, and what was not tested.
+- State which checks were characterization tests versus post-change regression tests when that distinction matters.
 - Tie gaps back to user-visible or contract-level risk.
 - Make browser-only gaps explicit, such as unverified clickability, responsive layout, focus handling, or overlay behavior.
 - Do not hide uncertainty behind a generic green or red summary.
@@ -142,6 +147,7 @@ When producing a validation artifact, prefer this structure:
 
 ## Coverage Added Or Updated
 - Tests added or changed
+- Which were characterization tests versus regression tests when applicable
 
 ## Checks Run
 - Commands executed

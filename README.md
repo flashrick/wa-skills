@@ -16,12 +16,14 @@ It is designed to support a staged web-development workflow where different skil
 
 - requirement clarification
 - UI/UX design
+- domain modeling for business-complex features
 - technical architecture
 - project-level agent operating rules
 - persistent execution planning across sessions
 - short-lived execution plans for specific coding tasks
 - codebase reconnaissance before risky changes
 - large migration and multi-file refactor planning
+- safe change planning for legacy or weakly tested code
 - bug root-cause investigation
 - application security review for web risks
 - feature impact and regression analysis
@@ -31,6 +33,7 @@ It is designed to support a staged web-development workflow where different skil
 - testing and validation
 - CI failure triage
 - PR feedback resolution
+- reliability review for failure modes and operational safety
 - deployment readiness
 - workflow orchestration
 - colloquial Chinese to natural English translation when context-aware language adaptation is needed
@@ -106,14 +109,36 @@ Do not use this skill for:
 
 ---
 
-### 3. `repo-architect`
+### 3. `domain-modeler`
+Responsible for:
+- bounded contexts
+- ubiquitous language
+- aggregates, invariants, and lifecycle rules
+- clarifying business concepts before technical structure hardens the wrong model
+
+Typical outputs:
+- `docs/domain-model.md`
+
+Use this skill when:
+- terminology is unstable or overloaded
+- business rules are hard to explain across modules
+- aggregate boundaries or context relationships need to be decided before architecture or implementation
+
+Do not use this skill for:
+- raw repo foldering
+- interface seam planning without domain ambiguity
+- direct implementation
+
+---
+
+### 4. `repo-architect`
 Responsible for:
 - technical architecture
 - module boundaries
 - API contracts
-- data model direction
 - implementation sequencing
 - frontend/backend integration planning
+- consuming settled domain-model guidance when structure depends on business semantics
 
 Typical outputs:
 - `docs/architecture.md`
@@ -129,12 +154,12 @@ Use this skill when:
 Do not use this skill for:
 - requirement interviews
 - visual preference collection
+- unresolved domain-language or aggregate-definition work
 - final feature implementation
-- deployment validation
 
 ---
 
-### 4. `agents-md-maintainer`
+### 5. `agents-md-maintainer`
 Responsible for:
 - creating a project-root `AGENTS.md`
 - updating stale or generic `AGENTS.md` rules
@@ -160,7 +185,7 @@ Do not use this skill for:
 
 ---
 
-### 5. `plans-md-maintainer`
+### 6. `plans-md-maintainer`
 Responsible for:
 - creating a project-root `PLANS.md`
 - keeping multi-step project status, milestones, blockers, and next actions current across sessions
@@ -181,7 +206,7 @@ Do not use this skill for:
 
 ---
 
-### 6. `task-plan-generator`
+### 7. `task-plan-generator`
 Responsible for:
 - creating short-lived execution plans for specific coding tasks
 - defining in-scope and out-of-scope work
@@ -203,7 +228,7 @@ Do not use this skill for:
 
 ---
 
-### 7. `codebase-recon`
+### 8. `codebase-recon`
 Responsible for:
 - read-first codebase orientation
 - mapping entry points, tests, contracts, and dependency signals
@@ -228,7 +253,7 @@ Do not use this skill for:
 
 ---
 
-### 8. `codebase-migration-planner`
+### 9. `codebase-migration-planner`
 Responsible for:
 - planning large migrations, dependency upgrades, framework upgrades, API renames, and multi-file refactors
 - defining exact transforms and blast radius
@@ -250,7 +275,29 @@ Do not use this skill for:
 
 ---
 
-### 9. `bug-investigator`
+### 10. `safe-change-planner`
+Responsible for:
+- defining behavior to preserve and behavior to change
+- planning characterization coverage
+- identifying the smallest useful seam
+- separating preparatory refactoring, behavior change, and cleanup
+
+Typical outputs:
+- `docs/change-safety-plan.md`
+
+Use this skill when:
+- a change targets legacy or weakly tested code
+- the requested fix is known but the code is risky to modify directly
+- a controlled refactor must stay behavior-preserving
+
+Do not use this skill for:
+- unknown bugs that still need diagnosis
+- broad migrations
+- direct implementation of already safe changes
+
+---
+
+### 11. `bug-investigator`
 Responsible for:
 - reproducing reported bugs or failing behavior
 - narrowing root cause with evidence
@@ -269,13 +316,13 @@ Use this skill when:
 
 Do not use this skill for:
 - obvious fixes that can go straight to implementation
+- known-root-cause changes that mainly need safe-change planning
 - CI provider or remote runner failures
 - general code review
-- test writing
 
 ---
 
-### 10. `feature-impact-reviewer`
+### 12. `feature-impact-reviewer`
 Responsible for:
 - reviewing what an intended or completed feature change could break
 - identifying shared contracts, dependent behavior, and regression-sensitive edges
@@ -297,7 +344,7 @@ Do not use this skill for:
 
 ---
 
-### 11. `web-security-reviewer`
+### 13. `web-security-reviewer`
 Responsible for:
 - reviewing scoped web features or changed areas for application security risk
 - identifying auth, permission, tenant-isolation, input-handling, data-exposure, and browser-security issues
@@ -320,7 +367,7 @@ Do not use this skill for:
 
 ---
 
-### 12. `backend-implementer`
+### 14. `backend-implementer`
 Responsible for:
 - backend code
 - APIs
@@ -328,6 +375,7 @@ Responsible for:
 - service logic
 - middleware
 - server-side integrations
+- implementing against already-decided architecture, domain, and reliability constraints
 - targeted `README.md` sync when implementation changes documented usage or behavior
 
 Typical outputs:
@@ -343,14 +391,13 @@ Use this skill when:
 
 Do not use this skill for:
 - redefining scope
+- inventing missing domain semantics or resilience policy on the fly
 - UI design decisions
-- frontend rendering work
 - deployment readiness review
-- `AGENTS.md` maintenance unless repo operating rules changed and require `agents-md-maintainer`
 
 ---
 
-### 13. `frontend-implementer`
+### 15. `frontend-implementer`
 Responsible for:
 - pages
 - components
@@ -379,16 +426,15 @@ Do not use this skill for:
 - redefining project scope
 - backend implementation
 - deployment review
-- `AGENTS.md` maintenance unless repo operating rules changed and require `agents-md-maintainer`
 
 ---
 
-### 14. `code-reviewer`
+### 16. `code-reviewer`
 Responsible for:
 - reviewing scoped code changes, branches, PRs, and patches
 - identifying correctness, maintainability, contract, lifecycle, and error-handling issues
+- checking mixed behavior-change/refactor patches, misplaced domain rules, and missing reliability boundaries
 - prioritizing findings by severity
-- identifying missing validation tied to concrete risk
 
 Typical outputs:
 - code review findings
@@ -408,16 +454,15 @@ Do not use this skill for:
 
 ---
 
-### 15. `test-engineer`
+### 17. `test-engineer`
 Responsible for:
 - adding or updating tests
 - running validation checks
 - triaging failures
 - identifying regressions
+- distinguishing characterization tests from post-change regression coverage when needed
 - performing browser-level interaction checks for frontend regression risks when needed
-- validating UI quality gates such as accessibility, responsive layout, interaction states, overflow, and rendered visual assets
-- reporting validation status
-- highlighting coverage gaps
+- reporting validation status and coverage gaps
 
 Typical outputs:
 - updated test files
@@ -428,7 +473,7 @@ Use this skill when:
 - tests should be added or fixed
 - failures need classification
 - release confidence is unclear
-- a frontend change needs evidence that design and interaction gates still hold in real rendering
+- a safe-change plan requires behavior to be captured before semantics move
 
 Do not use this skill for:
 - main feature planning
@@ -436,11 +481,10 @@ Do not use this skill for:
 - core implementation ownership
 - deployment environment review
 - CI provider or remote runner failure triage
-- PR review comment resolution
 
 ---
 
-### 16. `ci-failure-triager`
+### 18. `ci-failure-triager`
 Responsible for:
 - triaging failing CI checks, remote build jobs, and PR check failures
 - collecting high-signal logs
@@ -464,7 +508,7 @@ Do not use this skill for:
 
 ---
 
-### 17. `pr-feedback-resolver`
+### 19. `pr-feedback-resolver`
 Responsible for:
 - inventorying pull request review comments or issue feedback
 - grouping duplicate or related comments
@@ -489,13 +533,34 @@ Do not use this skill for:
 
 ---
 
-### 18. `deploy-readiness-check`
+### 20. `reliability-reviewer`
+Responsible for:
+- reviewing failure semantics, timeouts, retries, and degraded behavior
+- checking load limits, queue/pool bounds, and isolation assumptions
+- checking observability, restartability, and operational safety for scoped runtime paths
+
+Typical outputs:
+- `docs/reliability-review.md`
+
+Use this skill when:
+- a service, API, job, queue, cache, or integration needs focused resilience review
+- runtime failure behavior matters more than the happy path alone
+- release confidence depends on explicit operational-safety decisions
+
+Do not use this skill for:
+- final deploy go/no-go review
+- broad infrastructure architecture
+- direct implementation
+
+---
+
+### 21. `deploy-readiness-check`
 Responsible for:
 - deployment readiness review
 - environment/config completeness
 - build and release assumptions
 - identifying release blockers
-- creating a deployment checklist
+- creating a deployment checklist that consumes available validation and reliability findings
 
 Typical outputs:
 - `docs/deploy-checklist.md`
@@ -509,17 +574,17 @@ Use this skill when:
 Do not use this skill for:
 - writing core feature code
 - clarifying requirements
-- acting as the main testing skill
+- acting as the main resilience-design skill
 
 ---
 
-### 19. `workflow-orchestrator`
+### 22. `workflow-orchestrator`
 Responsible for:
 - deciding which skill should act next
 - enforcing stage order
 - checking handoff completeness
 - verifying stage acceptance conditions
-- keeping the project workflow disciplined
+- keeping modeling, architecture, safe-change, implementation, validation, reliability, and deploy stages disciplined
 
 Typical outputs:
 - `docs/workflow-status.md` when useful
@@ -540,7 +605,7 @@ Do not use this skill for:
 
 ---
 
-### 20. `spoken-cn-to-natural-en-translator`
+### 23. `spoken-cn-to-natural-en-translator`
 Responsible for:
 - translating colloquial Chinese into natural English
 - adapting wording to English-first syntax and tone
@@ -569,16 +634,19 @@ Default web-project workflow:
 
 1. `project-manager`
 2. `uiux-designer`
-3. `repo-architect`
-4. `codebase-recon` when the target code area is unfamiliar or risky
-5. `task-plan-generator` when a short-lived execution plan is required
-6. `agents-md-maintainer` when the repository needs a durable Codex operating contract before implementation scales
-7. `plans-md-maintainer` when the work should persist across sessions as a shared execution plan
-8. `backend-implementer`
-9. `frontend-implementer`
-10. `code-reviewer` when a completed or in-progress diff needs engineering review
-11. `test-engineer`
-12. `deploy-readiness-check`
+3. `domain-modeler` when business complexity, language, or aggregate boundaries are still unstable
+4. `repo-architect`
+5. `codebase-recon` when the target code area is unfamiliar or risky
+6. `task-plan-generator` when a short-lived execution plan is required
+7. `agents-md-maintainer` when the repository needs a durable Codex operating contract before implementation scales
+8. `plans-md-maintainer` when the work should persist across sessions as a shared execution plan
+9. `safe-change-planner` when a known change targets fragile existing code
+10. `backend-implementer`
+11. `frontend-implementer`
+12. `code-reviewer` when a completed or in-progress diff needs engineering review
+13. `test-engineer`
+14. `reliability-reviewer` when a scoped runtime path needs resilience review
+15. `deploy-readiness-check`
 
 After implementation, revisit:
 - `backend-implementer` or `frontend-implementer` for targeted `README.md` sync when documented behavior or usage changed
@@ -598,7 +666,7 @@ For UI-heavy frontend work, use a stricter handoff:
 - before implementation to map regression risk
 - after implementation to check what may still be missing
 
-`bug-investigator` is optional and fits before implementation when a reported bug or failing behavior has no clear root cause.
+`bug-investigator` is optional and fits before `safe-change-planner` or direct implementation when a reported bug or failing behavior has no clear root cause.
 
 `ci-failure-triager` is optional and fits after local or remote checks fail, especially when CI behavior differs from local behavior.
 
@@ -640,22 +708,25 @@ Examples:
 
 - `$project-manager` for requirement clarification
 - `$uiux-designer` for visual system and layout direction
-- `$repo-architect` for technical planning
+- `$domain-modeler` for bounded contexts, aggregates, and ubiquitous language
+- `$repo-architect` for technical planning after core domain semantics are stable
 - `$agents-md-maintainer` for project-root Codex operating rules
 - `$agents-md-maintainer` again after repo-shape or workflow changes make `AGENTS.md` stale
 - `$plans-md-maintainer` for project-root execution plan maintenance
 - `$task-plan-generator` for a short-lived coding task plan
 - `$codebase-recon` for read-first codebase orientation
 - `$codebase-migration-planner` for large migrations and multi-file refactor planning
-- `$bug-investigator` for root-cause diagnosis before implementation
+- `$safe-change-planner` for behavior-preserving change planning in legacy or weakly tested code
+- `$bug-investigator` for root-cause diagnosis before safe-change planning or implementation
 - `$feature-impact-reviewer` for change-specific regression impact analysis
 - `$web-security-reviewer` for scoped application-security review
 - `$backend-implementer` for server-side implementation and targeted `README.md` sync when backend-facing usage changes
 - `$frontend-implementer` for UI implementation and targeted `README.md` sync when frontend-facing usage changes
 - `$code-reviewer` for scoped engineering code review
-- `$test-engineer` for validation
+- `$test-engineer` for validation and characterization or regression coverage
 - `$ci-failure-triager` for failing CI or remote PR checks
 - `$pr-feedback-resolver` for addressing PR review comments or requested changes
+- `$reliability-reviewer` for failure semantics, timeout, retry, saturation, and operational-safety review
 - `$deploy-readiness-check` for release preparation
 - `$workflow-orchestrator` for gating and routing
 - `$spoken-cn-to-natural-en-translator` for colloquial Chinese to idiomatic English translation
@@ -690,7 +761,15 @@ This reduces silent assumption drift between planning, design, architecture, imp
 ### 4. Explicit handoffs
 Each skill should leave behind outputs that make the next skill easier to execute.
 
-### 5. Orchestration is control, not production
+### 5. Add a new skill only for a new kind of work
+Create a new skill when the repository needs a distinct responsibility, trigger condition, and deliverable that existing skills would blur.
+
+Prefer strengthening an existing skill when:
+- the work is the same responsibility with clearer guardrails
+- the change only improves workflow wording or handoff quality
+- a new folder would overlap heavily with an existing trigger
+
+### 6. Orchestration is control, not production
 `workflow-orchestrator` should manage flow, not replace the specialized skills.
 
 ---
@@ -707,6 +786,8 @@ WA-SKILLS/
 │   └── SKILL.md
 ├── uiux-designer/
 │   └── SKILL.md
+├── domain-modeler/
+│   └── SKILL.md
 ├── repo-architect/
 │   └── SKILL.md
 ├── agents-md-maintainer/
@@ -718,6 +799,8 @@ WA-SKILLS/
 ├── codebase-recon/
 │   └── SKILL.md
 ├── codebase-migration-planner/
+│   └── SKILL.md
+├── safe-change-planner/
 │   └── SKILL.md
 ├── bug-investigator/
 │   └── SKILL.md
@@ -737,10 +820,12 @@ WA-SKILLS/
 │   └── SKILL.md
 ├── pr-feedback-resolver/
 │   └── SKILL.md
+├── reliability-reviewer/
+│   └── SKILL.md
 ├── deploy-readiness-check/
 │   └── SKILL.md
-├── spoken-cn-to-natural-en-translator/
+├── workflow-orchestrator/
 │   └── SKILL.md
-└── workflow-orchestrator/
+└── spoken-cn-to-natural-en-translator/
     └── SKILL.md
 ```

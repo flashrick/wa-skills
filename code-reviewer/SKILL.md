@@ -10,6 +10,7 @@ description: Review a scoped code change, branch, pull request, or patch for cor
 - Reviews a bounded code change for defects and engineering risk.
 - Prioritizes findings by severity with file and line references when available.
 - Checks correctness, maintainability, API contracts, data handling, error paths, concurrency or lifecycle risk, and missing validation.
+- Checks whether behavior changes are improperly mixed with refactoring, whether domain rules leak into the wrong layer, and whether reliability boundaries are missing where they should be explicit.
 - Produces a concise review that helps the implementer fix the highest-value issues first.
 
 ## When It Should Trigger
@@ -55,6 +56,7 @@ description: Review a scoped code change, branch, pull request, or patch for cor
 
 - Check whether the implementation satisfies the intended behavior.
 - Look for broken API contracts, schema drift, serialization changes, permission assumptions, lifecycle ordering, state synchronization, and backward compatibility issues.
+- Look for business rules trapped in controllers, DTOs, serializers, transport glue, or persistence plumbing when they should live in clearer domain-owned code.
 - Trace shared helpers, public interfaces, and call sites only as far as needed to validate risk.
 
 ### 3. Inspect Failure Paths
@@ -62,10 +64,12 @@ description: Review a scoped code change, branch, pull request, or patch for cor
 - Review validation, error handling, retries, cleanup, null or empty states, boundary values, and partial-failure behavior.
 - For async or stateful code, check ordering, cancellation, race conditions, stale state, and idempotency.
 - For data changes, check migration assumptions, default values, uniqueness, and compatibility with existing rows or clients.
+- When the change touches dependencies, jobs, queues, or slow calls, check whether timeout, retry, or degraded-mode behavior is missing or accidental.
 
 ### 4. Inspect Maintainability
 
 - Prefer concrete maintainability issues that can become bugs or slow future changes.
+- Check whether refactoring, cleanup, and behavior changes are mixed tightly enough to make the patch unsafe to reason about.
 - Check duplication only when it creates real drift risk.
 - Check naming or structure only when it obscures behavior, contracts, or ownership.
 - Avoid style-only comments unless they hide a correctness problem.
@@ -134,6 +138,7 @@ Route to:
 
 - `web-security-reviewer` for auth, permission, sensitive-data, injection, browser-security, or trust-boundary issues
 - `feature-impact-reviewer` for focused regression mapping across existing behavior
+- `reliability-reviewer` for scoped resilience, timeout, retry, saturation, or operational-safety review
 - `deploy-readiness-check` for release configuration, migration rollout, rollback, or observability readiness
 
 ## Non-Goals
